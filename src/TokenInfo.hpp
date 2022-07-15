@@ -36,8 +36,36 @@ struct Location {
 };
 
 struct ScanInfo {
+ public:
+  void BufferMore(char* new_buffer) {
+    stream_buf = new_buffer;
+  }
+
+  void MoveRight() {
+    switch (CurrentSymbol()) {
+      case '\n':
+        loc.columnno = 0;
+        loc.lineno += 1;
+        break;
+
+      case EOF:
+        loc.file = -1;
+        break;
+
+      default:
+        loc.columnno += 1;
+    }
+  }
+
+  // char Peek() cosnt { }
+
+  char CurrentSymbol() const {
+    return stream_buf[loc.columnno];
+  }
+
+ private:
   char* stream_buf;
-  struct Location loc;
+  Location loc;
 };
 
 //////////////////////////////////////////////////////////////////////

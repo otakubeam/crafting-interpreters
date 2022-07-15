@@ -1,12 +1,13 @@
 #include <iostream>
 #include <string>
+#include <optional>
 
-#include "TokenInfo.hpp"
+#include <src/TokenInfo.hpp>
 
 class Lexer {
  public:
-  Token NextToken(ScanInfo& info) {
-    SkipWhitespace(info);
+  Token NextToken() {
+    SkipWhitespace();
 
     // TODO: match operators
     // TODO: match keywords
@@ -21,30 +22,15 @@ class Lexer {
     return ch == '\n' || ch == ' ' || ch == '\t';
   }
 
-  char CurrentSymbol(struct ScanInfo& info) {
-    return info.stream_buf[info.loc.columnno];
-  }
-
-  void SkipWhitespace(ScanInfo& info) {
-    while (IsWhitespace(CurrentSymbol(info))) {
+  void SkipWhitespace() {
+    while (IsWhitespace(info_.CurrentSymbol())) {
       ;
     }
   }
 
+  std::optional<Token> MatchOperators() {
+  }
+
  private:
+  ScanInfo info_;
 };
-
-//////////////////////////////////////////////////////////////////////
-
-void BufferMore(ScanInfo& info) {
-  // ...
-}
-
-void MoveRight(ScanInfo& info) {
-  if (CurrentSymbol(info) == EOF) {
-  }
-
-  if (CurrentSymbol(info) == '\n') {
-  } else {
-  }
-}
