@@ -1,10 +1,16 @@
 #pragma once
 
+#include <variant>
+
 #include <string>
 
 //////////////////////////////////////////////////////////////////////
 
-enum TokenType {
+// There is no behaviour to a token,
+// so it doesn't make sense for it to be
+// a class with virtual methods and such
+
+enum class TokenType {
   NUMBER,
   STRING,
 
@@ -37,6 +43,9 @@ struct Location {
 
 struct ScanInfo {
  public:
+  ScanInfo() {
+  }
+
   void BufferMore(char* new_buffer) {
     stream_buf = new_buffer;
   }
@@ -63,8 +72,12 @@ struct ScanInfo {
     return stream_buf[loc.columnno];
   }
 
+  Location CurrentTokenLocation(size_t length) const {
+    return loc;
+  }
+
  private:
-  char* stream_buf;
+  char* stream_buf = 0;
   Location loc;
 };
 
@@ -75,10 +88,7 @@ struct Token {
 
   Location loc;
 
-  union {
-    int value;
-    std::string name;
-  } whatsmore;
+  std::variant<int, std::string> sem_info{0};
 };
 
 //////////////////////////////////////////////////////////////////////
