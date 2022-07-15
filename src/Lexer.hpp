@@ -1,17 +1,17 @@
 #pragma once
 
 #include <src/LexerStrCmp.hpp>
-
+#include <src/IdentTable.hpp>
 #include <src/TokenInfo.hpp>
 
 #include <optional>
 #include <string>
 
-#include <stdio.h>
+#include <cstdio>
 
 class Lexer {
  public:
-  Token NextToken() {
+  Token GetNextToken() {
     SkipWhitespace();
 
     if (auto op = MatchOperators()) {
@@ -22,8 +22,9 @@ class Lexer {
       return *lit;
     }
 
-    // TODO: match keywords
-    // TODO: match identifiers
+    if (auto word = MatchKeywords()) {
+      return *word;
+    }
 
     std::abort();
   }
@@ -74,12 +75,48 @@ class Lexer {
   }
 
   std::optional<Token> MatchStringLiteral() {
-    // TODO: where do I place string literals?
-    return std::nullopt;
+    if (info_.CurrentSymbol() != '\"') {
+      return std::nullopt;
+    }
+
+    // It matched! Now do match the whole string
+
+    info_.MoveRight();
+    std::string lit;
+
+    while (info_.CurrentSymbol() != '\"') {
+      lit.push_back(info_.CurrentSymbol());
+    }
+
+    return Token{TokenType::STRING, info_.GetSpan(lit.length()), {lit}};
+  }
+
+  ////////////////////////////////////////////////////////////////////
+
+  std::string BufferWord() {
+    std::string result;
+
+    while (isalnum(info_.CurrentSymbol())) {
+      result.push_back(info_.CurrentSymbol());
+    }
+
+    return result;
+  }
+
+  std::optional<Token> MatchKeywords() {
+    auto word = BufferWord();
+    auto type = table_.LookupOrInsert(word);
+    if (type == TokenType::IDENTIFIER) {
+      // TODO: gather identifiers with the same name
+      return Token{type, info_.GetSpan(word.length()), {word}};
+    } else {
+      return Token{type, info_.GetSpan(word.length()), {0}};
+    }
   }
 
   ////////////////////////////////////////////////////////////////////
 
  private:
   ScanInfo info_{};
+  IdentTable table_{};
 };
