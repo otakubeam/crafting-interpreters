@@ -1,7 +1,6 @@
 #pragma once
 
 #include <variant>
-
 #include <string>
 
 //////////////////////////////////////////////////////////////////////
@@ -13,18 +12,27 @@
 enum class TokenType {
   NUMBER,
   STRING,
+  IDENTIFIER,
 
   PLUS,
   MINUS,
 
+  EQ,
+  LT,
+
+  LEFT_BRACE,
+  RIGHT_BRACE,
+
+  NOT,
+
   PRINT,
   FUN,  // FUN foo
   VAR,  // VAR name
-  // Wait, what?? name and foo should instead be its own things
-  // perhaps TokenType ID
-  IDENTIFIER,
 
-  // These only change the state of the lexer
+  IF,
+  FOR,
+
+  // These only change the location info of the lexer
   TOKEN_EOL,
   TOKEN_EOF,
 };
@@ -43,9 +51,6 @@ struct Location {
 
 struct ScanInfo {
  public:
-  ScanInfo() {
-  }
-
   void BufferMore(char* new_buffer) {
     stream_buf = new_buffer;
   }
@@ -66,14 +71,19 @@ struct ScanInfo {
     }
   }
 
-  // char Peek() cosnt { }
+  // char Peek() const { }
 
   char CurrentSymbol() const {
     return stream_buf[loc.columnno];
   }
 
-  Location CurrentTokenLocation(size_t length) const {
-    return loc;
+  Location GetSpan(size_t length) const {
+    auto result = loc;
+
+    // TODO: get an actual span
+    result.columnno -= length;
+
+    return result;
   }
 
  private:
@@ -82,6 +92,8 @@ struct ScanInfo {
 };
 
 //////////////////////////////////////////////////////////////////////
+
+// Length of a number or a name is not semantic information
 
 struct Token {
   TokenType type;

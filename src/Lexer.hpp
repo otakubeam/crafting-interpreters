@@ -7,15 +7,22 @@
 #include <optional>
 #include <string>
 
+#include <stdio.h>
+
 class Lexer {
  public:
   Token NextToken() {
     SkipWhitespace();
 
     if (auto op = MatchOperators()) {
+      return *op;
     }
+
+    if (auto lit = MatchLiterls()) {
+      return *lit;
+    }
+
     // TODO: match keywords
-    // TODO: match literals
     // TODO: match identifiers
 
     std::abort();
@@ -28,25 +35,50 @@ class Lexer {
     }
   }
 
-  std::optional<int> abc() {
-    return 5;
-  }
+  ////////////////////////////////////////////////////////////////////
 
   std::optional<Token> MatchOperators() {
-    switch (info_.CurrentSymbol()) {
-      case '+':
-        auto t = Token{TokenType::PLUS, info_.CurrentTokenLocation(1), {0}};
-        break;
-      case '-':
-      case '=':
-      case '!':
-      case '<':
-      case '(':
-      case ')':
-      default:
-        return std::nullopt;
+    if (auto type = MatchSingleWidthOperator(info_.CurrentSymbol())) {
+      return Token{*type, info_.GetSpan(1), {0}};
     }
+
+    return std::nullopt;
   }
+
+  ////////////////////////////////////////////////////////////////////
+
+  std::optional<Token> MatchLiterls() {
+    if (auto num_token = MatchNumericLiteral()) {
+      return num_token;
+    }
+
+    if (auto string_token = MatchStringLiteral()) {
+      return string_token;
+    }
+
+    return std::nullopt;
+  }
+
+  std::optional<Token> MatchNumericLiteral() {
+    int result = 0, match_span = 0;
+
+    while (isdigit(info_.CurrentSymbol())) {
+      result *= 10;
+      result += info_.CurrentSymbol() - '0';
+
+      info_.MoveRight();
+      match_span += 1;
+    }
+
+    return Token{TokenType::NUMBER, info_.GetSpan(match_span), {result}};
+  }
+
+  std::optional<Token> MatchStringLiteral() {
+    // TODO: where do I place string literals?
+    return std::nullopt;
+  }
+
+  ////////////////////////////////////////////////////////////////////
 
  private:
   ScanInfo info_{};
