@@ -9,8 +9,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_compile_options(-Wall -Wextra -Wpedantic -g -fno-omit-frame-pointer)
 
 function(add_task_library DIR_NAME)
+
     set(LIB_TARGET lex)
-    set(LIB_DIR .)
+    set(LIB_DIR lex)
 
     file(GLOB_RECURSE LIB_CXX_SOURCES ${LIB_DIR}/*.cpp)
     file(GLOB_RECURSE LIB_HEADERS ${LIB_DIR}/*.hpp ${LIB_DIR}/*.ipp)
