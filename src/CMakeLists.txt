@@ -1,5 +1,7 @@
 project(interpreter)
 
+# --------------------------------------------------------------------
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -8,10 +10,12 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_compile_options(-Wall -Wextra -Wpedantic -g -fno-omit-frame-pointer)
 
+# --------------------------------------------------------------------
+
 function(add_task_library DIR_NAME)
 
-    set(LIB_TARGET lex)
-    set(LIB_DIR lex)
+    set(LIB_TARGET ${DIR_NAME})
+    set(LIB_DIR ${DIR_NAME})
 
     file(GLOB_RECURSE LIB_CXX_SOURCES ${LIB_DIR}/*.cpp)
     file(GLOB_RECURSE LIB_HEADERS ${LIB_DIR}/*.hpp ${LIB_DIR}/*.ipp)
@@ -23,4 +27,10 @@ function(add_task_library DIR_NAME)
 
 endfunction()
 
-add_task_library(one)
+# --------------------------------------------------------------------
+
+add_task_library(lex)
+
+add_task_library(parse)
+
+# --------------------------------------------------------------------

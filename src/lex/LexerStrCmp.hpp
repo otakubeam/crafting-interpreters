@@ -4,11 +4,13 @@
 
 #include <optional>
 
-bool IsWhitespace(char ch) {
+namespace lex {
+
+inline bool IsWhitespace(char ch) {
   return ch == '\n' || ch == ' ' || ch == '\t';
 }
 
-std::optional<TokenType> MatchSingleWidthOperator(char ch) {
+inline std::optional<TokenType> MatchSingleWidthOperator(char ch) {
   switch (ch) {
     case '+':
       return TokenType::PLUS;
@@ -21,10 +23,12 @@ std::optional<TokenType> MatchSingleWidthOperator(char ch) {
     case '<':
       return TokenType::LT;
     case '(':
-      return TokenType::LBR;
+      return TokenType::LEFT_BRACE;
     case ')':
-      return TokenType::RBR;
+      return TokenType::RIGHT_BRACE;
     default:
       return std::nullopt;
   }
 }
+
+}  // namespace lex

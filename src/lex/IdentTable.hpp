@@ -5,6 +5,8 @@
 #include <string>
 #include <map>
 
+namespace lex {
+
 class IdentTable {
  public:
   IdentTable() {
@@ -26,3 +28,5 @@ class IdentTable {
  private:
   std::map<std::string, TokenType> map_;
 };
+
+}  // namespace lex

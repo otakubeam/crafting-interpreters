@@ -6,8 +6,11 @@
 
 #include <optional>
 #include <string>
+#include <stack>
 
 #include <cstdio>
+
+namespace lex {
 
 class Lexer {
  public:
@@ -26,6 +29,12 @@ class Lexer {
       return *word;
     }
 
+    std::abort();
+  }
+
+  // TODO: think better
+  void UngetNextToken(Token t) {
+    rejected_tokens_.push(t);
     std::abort();
   }
 
@@ -119,4 +128,8 @@ class Lexer {
  private:
   ScanInfo info_{};
   IdentTable table_{};
+
+  std::stack<Token> rejected_tokens_;
 };
+
+}  // namespace lex
