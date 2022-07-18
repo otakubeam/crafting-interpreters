@@ -34,3 +34,33 @@ add_task_library(lex)
 add_task_library(parse)
 
 # --------------------------------------------------------------------
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin")
+
+function(add_task_executable BINARY_NAME)
+
+    set(BINARY_SOURCES ${ARGN})
+
+    add_executable(${BINARY_NAME} ${BINARY_SOURCES} ${TASK_SOURCES})
+    target_link_libraries(${BINARY_NAME} lex parse)
+
+endfunction()
+
+# --------------------------------------------------------------------
+
+function(add_task_test_dir DIR_NAME)
+
+    set(BINARY_NAME ${DIR_NAME})
+
+    set(TEST_DIR "${DIR_NAME}/test")
+    file(GLOB_RECURSE TEST_CXX_SOURCES ${TEST_DIR}/*.cpp)
+
+    set(TEST_NAME "${DIR_NAME}_test")
+    add_task_executable(${TEST_NAME} ${TEST_CXX_SOURCES})
+
+endfunction()
+
+# --------------------------------------------------------------------
+
+add_task_test_dir(parse)
+

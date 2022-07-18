@@ -1,8 +1,8 @@
 #pragma once
 
-#include <src/parse/SyntaxTree.hpp>
+#include <parse/SyntaxTree.hpp>
 
-#include <src/lex/Lexer.hpp>
+#include <lex/Lexer.hpp>
 
 #include <vector>
 

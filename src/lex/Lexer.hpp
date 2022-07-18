@@ -1,8 +1,8 @@
 #pragma once
 
-#include <src/lex/LexerStrCmp.hpp>
-#include <src/lex/IdentTable.hpp>
-#include <src/lex/TokenInfo.hpp>
+#include <lex/LexerStrCmp.hpp>
+#include <lex/IdentTable.hpp>
+#include <lex/TokenInfo.hpp>
 
 #include <optional>
 #include <string>
@@ -14,8 +14,10 @@ namespace lex {
 class Lexer {
  public:
   Lexer(char* stream) : info_{stream} {
-    peek_ = GetNextToken();
+    Advance();
   }
+
+  ////////////////////////////////////////////////////////////////////
 
   Token GetNextToken() {
     SkipWhitespace();
@@ -35,6 +37,8 @@ class Lexer {
     std::abort();
   }
 
+  ////////////////////////////////////////////////////////////////////
+
   Token Advance() {
     peek_ = GetNextToken();
     return peek_;
@@ -43,6 +47,8 @@ class Lexer {
   Token Peek() const {
     return peek_;
   }
+
+  ////////////////////////////////////////////////////////////////////
 
  private:
   void SkipWhitespace() {

@@ -1,4 +1,4 @@
-#include <src/parse/Parse.hpp>
+#include <parse/Parse.hpp>
 
 int main() {
   lex::Location loc;

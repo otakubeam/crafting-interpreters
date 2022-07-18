@@ -72,8 +72,6 @@ struct ScanInfo {
     }
   }
 
-  // char Peek() const { }
-
   char CurrentSymbol() const {
     return stream_buf[loc.columnno];
   }
