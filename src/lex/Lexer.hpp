@@ -35,6 +35,11 @@ class Lexer {
     std::abort();
   }
 
+  Token Advance() {
+    peek_ = GetNextToken();
+    return peek_;
+  }
+
   Token Peek() const {
     return peek_;
   }

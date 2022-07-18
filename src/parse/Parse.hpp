@@ -25,9 +25,11 @@ class Parser {
       return false;
     }
 
-    // TODO: advance()
-    // lexer_.GetNextToken()
+    lexer_.Advance();
+    return true;
   }
+
+  ////////////////////////////////////////////////////////////////////
 
   TreeNode* ParsePrimary() {
     auto token = lexer_.Peek();
