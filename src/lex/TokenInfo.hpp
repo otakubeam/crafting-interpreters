@@ -53,8 +53,7 @@ struct Location {
 
 struct ScanInfo {
  public:
-  void BufferMore(char* new_buffer) {
-    stream_buf = new_buffer;
+  ScanInfo(char* new_buffer) : stream_buf{new_buffer} {
   }
 
   void MoveRight() {

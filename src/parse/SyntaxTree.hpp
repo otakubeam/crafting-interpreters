@@ -21,13 +21,27 @@ class Expression : public TreeNode {
 
 //////////////////////////////////////////////////////////////////////
 
-class UnaryExpression : public TreeNode {};
+class UnaryExpression : public Expression {
+ public:
+  lex::Token operator_;
+  Expression* operand_;
+};
 
 //////////////////////////////////////////////////////////////////////
 
-class PrimaryExpression : public TreeNode {
+class PrimaryExpression : public Expression {
  public:
-  PrimaryExpression(lex::Token token) : token_{token} {
+  virtual void Accept(Visitor* visitor) override {
+    visitor->VisitPrimaryExpression(this);
+  }
+
+  // std::variant<LiteralExpression, GroupingExpression> primary_;
+
+  // TODO: what if primary is a grouping expression?
+};
+
+class LiteralExpression : public Expression {
+  LiteralExpression(lex::Token token) : token_{token} {
   }
 
   virtual void Accept(Visitor* visitor) override {
@@ -37,4 +51,5 @@ class PrimaryExpression : public TreeNode {
   lex::Token token_{};
 };
 
+class GroupingExpression : public Expression {};
 //////////////////////////////////////////////////////////////////////

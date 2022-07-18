@@ -19,18 +19,28 @@ class Parser {
 
   ////////////////////////////////////////////////////////////////////
 
+  // Only for syntactic ones
+  bool Match(lex::TokenType type) {
+    if (lexer_.Peek().type != type) {
+      return false;
+    }
+
+    // TODO: advance()
+    // lexer_.GetNextToken()
+  }
+
   TreeNode* ParsePrimary() {
-    auto token = lexer_.GetNextToken();
+    auto token = lexer_.Peek();
 
     switch (token.type) {
       case lex::TokenType::NUMBER:
-        return new PrimaryExpression{std::move(token)};
-        break;
       case lex::TokenType::STRING:
-        break;
+        return new PrimaryExpression{std::move(token)};
+
       case lex::TokenType::IDENTIFIER:
         // unimplemented!
         std::abort();
+
       case lex::TokenType::LEFT_BRACE:
         if (auto expr = ParseExpression()) {
           // TODO: Match right BRACE
@@ -38,27 +48,11 @@ class Parser {
 
           return expr;
         }
-      case lex::TokenType::RIGHT_BRACE:
 
-      // explicit default:
-      case lex::TokenType::EQ:
-      case lex::TokenType::LT:
-      case lex::TokenType::TOKEN_EOL:
-      case lex::TokenType::TOKEN_EOF:
-      case lex::TokenType::PLUS:
-      case lex::TokenType::MINUS:
-      case lex::TokenType::NOT:
-      case lex::TokenType::PRINT:
-      case lex::TokenType::FUN:
-      case lex::TokenType::VAR:
-      case lex::TokenType::IF:
-      case lex::TokenType::FOR:
-        lexer_.UngetNextToken(token);
+      default:
+        // TODO: report errors
         return nullptr;
     }
-
-    // unreachable!
-    std::abort();
   }
 
   ////////////////////////////////////////////////////////////////////

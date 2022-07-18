@@ -6,7 +6,6 @@
 
 #include <optional>
 #include <string>
-#include <stack>
 
 #include <cstdio>
 
@@ -14,6 +13,10 @@ namespace lex {
 
 class Lexer {
  public:
+  Lexer(char* stream) : info_{stream} {
+    peek_ = GetNextToken();
+  }
+
   Token GetNextToken() {
     SkipWhitespace();
 
@@ -32,10 +35,8 @@ class Lexer {
     std::abort();
   }
 
-  // TODO: think better
-  void UngetNextToken(Token t) {
-    rejected_tokens_.push(t);
-    std::abort();
+  Token Peek() const {
+    return peek_;
   }
 
  private:
@@ -126,10 +127,9 @@ class Lexer {
   ////////////////////////////////////////////////////////////////////
 
  private:
-  ScanInfo info_{};
+  Token peek_{};
+  ScanInfo info_;
   IdentTable table_{};
-
-  std::stack<Token> rejected_tokens_;
 };
 
 }  // namespace lex

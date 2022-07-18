@@ -22,7 +22,10 @@ class Visitor {
 
  public:
   virtual void VisitExpression(Expression* node) = 0;
-  virtual void VisitPrimaryExpression(PrimaryExpression* node) = 0;
+
+  virtual void VisitLiteral(Expression* node) = 0;
+  // TODO: does it need its own function?
+  virtual void VisitGrouping(Expression* node) = 0;
 };
 
 //////////////////////////////////////////////////////////////////////
