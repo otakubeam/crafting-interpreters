@@ -4,6 +4,7 @@
 
 class TreeNode;
 class Expression;
+class ComparisonExpression;
 class BinaryExpression;
 class UnaryExpression;
 class LiteralExpression;
@@ -27,11 +28,14 @@ class Visitor {
  public:
   virtual void VisitExpression(Expression* node) = 0;
 
+  virtual void VisitComparison(ComparisonExpression* node) = 0;
+
   virtual void VisitBinary(BinaryExpression* node) = 0;
 
   virtual void VisitUnary(UnaryExpression* node) = 0;
 
   virtual void VisitLiteral(LiteralExpression* node) = 0;
+
   // TODO: does it need its own function?
   virtual void VisitGrouping(Expression* node) = 0;
 };

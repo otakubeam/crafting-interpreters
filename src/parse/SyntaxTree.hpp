@@ -21,6 +21,23 @@ class Expression : public TreeNode {
 
 //////////////////////////////////////////////////////////////////////
 
+class ComparisonExpression : public Expression {
+ public:
+  ComparisonExpression(Expression* left, lex::Token op, Expression* right)
+      : left_{left}, operator_(op), right_{right} {
+  }
+
+  virtual void Accept(Visitor* visitor) override {
+    visitor->VisitComparison(this);
+  }
+
+  Expression* left_;
+  lex::Token operator_;
+  Expression* right_;
+};
+
+//////////////////////////////////////////////////////////////////////
+
 class BinaryExpression : public Expression {
  public:
   BinaryExpression(Expression* left, lex::Token op, Expression* right)
