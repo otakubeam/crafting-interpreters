@@ -16,6 +16,10 @@ enum class TokenType {
   STRING,
   IDENTIFIER,
 
+  // TODO:
+  TRUE,
+  FALSE,
+
   PLUS,
   MINUS,
 
@@ -92,14 +96,23 @@ struct ScanInfo {
 
 //////////////////////////////////////////////////////////////////////
 
-// Length of a number or a name is not semantic information
+struct String {
+  char* str = 0;
+  size_t length = 0;
+};
 
 struct Token {
   TokenType type;
 
   Location loc;
 
-  std::variant<int, std::string> sem_info{0};
+  std::variant<        //
+      std::nullptr_t,  //
+      int,             //
+      bool,            //
+      char             //
+      >
+      sem_info{0};
 };
 
 //////////////////////////////////////////////////////////////////////

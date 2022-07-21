@@ -1,0 +1,2 @@
+/usr/bin/ar qc liblex.a CMakeFiles/lex.dir/lex/Unit.o CMakeFiles/lex.dir/lex/test/main.o
+/usr/bin/ranlib liblex.a

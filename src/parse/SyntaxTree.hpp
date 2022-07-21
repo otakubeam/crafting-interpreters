@@ -14,9 +14,8 @@ class TreeNode {
 //////////////////////////////////////////////////////////////////////
 
 class Expression : public TreeNode {
-  virtual void Accept(Visitor* visitor) override {
-    visitor->VisitExpression(this);
-  }
+ public:
+  virtual void Accept(Visitor* visitor) = 0;
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -82,10 +81,5 @@ class LiteralExpression : public Expression {
 
   lex::Token token_{};
 };
-
-//////////////////////////////////////////////////////////////////////
-
-// TODO: It seems that grouping indeed dosn't need it own class
-class GroupingExpression : public Expression {};
 
 //////////////////////////////////////////////////////////////////////
