@@ -5,8 +5,9 @@
 
 #include <optional>
 #include <string>
-
 #include <cstdio>
+
+#include <catch2/catch.hpp>
 #include <fmt/format.h>
 
 namespace lex {
@@ -22,15 +23,13 @@ class Lexer {
   Token GetNextToken() {
     SkipWhitespace();
 
-    fmt::print("Hello world", 0);
-
     if (auto op = MatchOperators()) {
+      UNSCOPED_INFO("Return oper\n");
       return *op;
     }
 
-    fmt::print("Hello world", 0);
-
     if (auto lit = MatchLiterls()) {
+      UNSCOPED_INFO("Return literal\n");
       return *lit;
     }
 
@@ -76,6 +75,8 @@ class Lexer {
 
   std::optional<Token> MatchLiterls() {
     if (auto num_token = MatchNumericLiteral()) {
+      UNSCOPED_INFO("Return numeric\n");
+
       return num_token;
     }
 
@@ -90,11 +91,19 @@ class Lexer {
     int result = 0, match_span = 0;
 
     while (isdigit(info_.CurrentSymbol())) {
+      UNSCOPED_INFO(                                  //
+          fmt::format("CurrentSymbol {} is a digit",  //
+                      info_.CurrentSymbol()));
+
       result *= 10;
       result += info_.CurrentSymbol() - '0';
 
       info_.MoveRight();
       match_span += 1;
+    }
+
+    if (match_span == 0) {
+      return std::nullopt;
     }
 
     return Token{TokenType::NUMBER, info_.GetSpan(match_span), {result}};
@@ -112,6 +121,7 @@ class Lexer {
 
     while (info_.CurrentSymbol() != '\"') {
       lit.push_back(info_.CurrentSymbol());
+      info_.MoveRight();
     }
 
     return Token{TokenType::STRING, info_.GetSpan(lit.length()), {lit[0]}};
@@ -124,6 +134,7 @@ class Lexer {
 
     while (isalnum(info_.CurrentSymbol())) {
       result.push_back(info_.CurrentSymbol());
+      info_.MoveRight();
     }
 
     return result;

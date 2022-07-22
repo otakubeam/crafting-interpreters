@@ -16,6 +16,9 @@ class IdentTable {
   void Populate() {
     map_.insert({"print", TokenType::PRINT});
     map_.insert({"var", TokenType::VAR});
+    map_.insert({"fun", TokenType::FUN});
+    map_.insert({"for", TokenType::FOR});
+    map_.insert({"if", TokenType::IF});
   }
 
   TokenType LookupOrInsert(const std::string& lexeme) {
