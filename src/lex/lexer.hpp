@@ -27,8 +27,7 @@ class Lexer {
     if (auto op = MatchOperators()) {
       return *op;
     }
-    
-    
+
     fmt::print("Hello world", 0);
 
     if (auto lit = MatchLiterls()) {
@@ -66,7 +65,7 @@ class Lexer {
 
   std::optional<Token> MatchOperators() {
     if (auto type = MatchSingleWidthOperator(info_.CurrentSymbol())) {
-       // TODO: move cursor
+      info_.MoveRight();
       return Token{*type, info_.GetSpan(1), {0}};
     }
 
