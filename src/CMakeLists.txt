@@ -10,6 +10,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_compile_options(-Wall -Wextra -Wpedantic -g -fno-omit-frame-pointer)
 
+find_package(fmt)
+
 # --------------------------------------------------------------------
 
 function(add_task_library DIR_NAME)
@@ -42,7 +44,7 @@ function(add_task_executable BINARY_NAME)
     set(BINARY_SOURCES ${ARGN})
 
     add_executable(${BINARY_NAME} ${BINARY_SOURCES} ${TASK_SOURCES})
-    target_link_libraries(${BINARY_NAME} lex parse)
+    target_link_libraries(${BINARY_NAME} lex parse fmt::fmt)
 
 endfunction()
 
