@@ -50,6 +50,7 @@ struct UserDefinedType {
 
 //////////////////////////////////////////////////////////////////////
 
+// using SBObject  =
 struct SBObject {
   std::variant<         //
       PrimitiveType,    //
@@ -57,6 +58,12 @@ struct SBObject {
       >
       object_;
 };
+
+template<typename T>
+inline T GetPrim(const SBObject& object) {
+   auto prim = std::get<PrimitiveType>(object.object_);
+   return std::get<T>(prim);
+}
 
 //////////////////////////////////////////////////////////////////////
 

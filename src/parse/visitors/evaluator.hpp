@@ -15,7 +15,7 @@ class Evaluator : public ReturnVisitor<SBObject> {
 
     switch (node->operator_.type) {
       case lex::TokenType::NOT:
-         return_value = SBObject{! std::get<bool>(val.object_)};
+         return_value = SBObject{PrimitiveType{! GetPrim<bool>(val)}};
       case lex::TokenType::MINUS:
       default:
         std::abort();
