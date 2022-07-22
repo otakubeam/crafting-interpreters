@@ -50,19 +50,21 @@ struct UserDefinedType {
 
 //////////////////////////////////////////////////////////////////////
 
-// using SBObject  =
-struct SBObject {
+using SBObject  =
   std::variant<         //
       PrimitiveType,    //
       UserDefinedType*  //
-      >
-      object_;
-};
+      >;
 
 template<typename T>
 inline T GetPrim(const SBObject& object) {
-   auto prim = std::get<PrimitiveType>(object.object_);
+   auto prim = std::get<PrimitiveType>(object);
    return std::get<T>(prim);
+}
+
+template<typename T>
+inline SBObject FromPrim(T value) {
+   return SBObject{PrimitiveType{value}};
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -70,10 +72,10 @@ inline T GetPrim(const SBObject& object) {
 // What do I allow for a type?
 
 inline SBObject plus(SBObject one, SBObject two) {
-  switch (one.object_.index()) {
+  switch (one.index()) {
     case 0: {
-      auto prim_one = std::get<PrimitiveType>(one.object_);
-      auto prim_two = std::get<PrimitiveType>(two.object_);
+      auto prim_one = std::get<PrimitiveType>(one);
+      auto prim_two = std::get<PrimitiveType>(two);
       return {plus(prim_one, prim_two)};
     }
     default:
@@ -82,10 +84,10 @@ inline SBObject plus(SBObject one, SBObject two) {
 }
 
 inline SBObject minus(SBObject one, SBObject two) {
-  switch (one.object_.index()) {
+  switch (one.index()) {
     case 0: {
-      auto prim_one = std::get<PrimitiveType>(one.object_);
-      auto prim_two = std::get<PrimitiveType>(two.object_);
+      auto prim_one = std::get<PrimitiveType>(one);
+      auto prim_two = std::get<PrimitiveType>(two);
       return {minus(prim_one, prim_two)};
     }
     case 1:
@@ -97,9 +99,9 @@ inline SBObject minus(SBObject one, SBObject two) {
 //////////////////////////////////////////////////////////////////////
 
 inline SBObject bang(SBObject one) {
-  switch (one.object_.index()) {
+  switch (one.index()) {
     case 0:
-      return {bang(std::get<0>(one.object_))};
+      return {bang(std::get<0>(one))};
     case 1:
     default:
       throw "Cannot UDTs";
@@ -107,9 +109,9 @@ inline SBObject bang(SBObject one) {
 }
 
 inline SBObject negate(SBObject one) {
-  switch (one.object_.index()) {
+  switch (one.index()) {
     case 0:
-      return {negate(std::get<0>(one.object_))};
+      return {negate(std::get<0>(one))};
     case 1:
     default:
       throw "Cannot UDTs";
