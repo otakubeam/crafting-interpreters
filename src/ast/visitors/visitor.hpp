@@ -11,8 +11,6 @@ class BinaryExpression;
 class UnaryExpression;
 class LiteralExpression;
 
-// TODO: should Visitor actually move out of `parse` dir?
-
 class Visitor {
   // So visitor must know about expressions and others
   // (so it can implement its own functionality)
