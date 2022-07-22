@@ -4,10 +4,20 @@
 class Evaluator : public ReturnVisitor<SBObject> {
  public:
 
-    // Of course visit cannot return SBObject
-
   virtual void VisitComparison(ComparisonExpression* node) {
-    
+    auto lhs = Eval(node->left_);
+    auto rhs = Eval(node->right_);
+
+    switch (node->operator_.type) {
+       case lex::TokenType::EQ:
+         return_value = PrimitiveType{lhs == rhs};
+         break;
+       case lex::TokenType::LT:
+         return_value = PrimitiveType{lhs < rhs};
+         break;
+       default:
+         std::abort();   
+    }
   }
 
   virtual void VisitBinary(BinaryExpression* node) {
@@ -17,8 +27,10 @@ class Evaluator : public ReturnVisitor<SBObject> {
     switch (node->operator_.type) {
        case lex::TokenType::PLUS:
           return_value = plus(rhs, lhs);
+          break;
        case lex::TokenType::MINUS:
           return_value = minus(rhs, lhs);
+          break;
        default:
           std::abort();
     }
@@ -31,8 +43,10 @@ class Evaluator : public ReturnVisitor<SBObject> {
     switch (node->operator_.type) {
       case lex::TokenType::NOT:
          return_value = bang(val);
+          break;
       case lex::TokenType::MINUS:
          return_value = negate(val);
+          break;
       default:
         std::abort();
     }
