@@ -13,7 +13,7 @@ class Evaluator : public ReturnVisitor<SBObject> {
          return_value = {PrimitiveType{lhs == rhs}};
          break;
        case lex::TokenType::LT:
-         return_value = {PrimitiveType{lhs < rhs}};
+         // return_value = {PrimitiveType{lhs < rhs}};
          break;
        default:
          std::abort();   

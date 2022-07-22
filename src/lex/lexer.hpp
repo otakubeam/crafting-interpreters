@@ -108,7 +108,7 @@ class Lexer {
       lit.push_back(info_.CurrentSymbol());
     }
 
-    return Token{TokenType::STRING, info_.GetSpan(lit.length()), {lit}};
+    return Token{TokenType::STRING, info_.GetSpan(lit.length()), {lit[0]}};
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -128,7 +128,7 @@ class Lexer {
     auto type = table_.LookupOrInsert(word);
     if (type == TokenType::IDENTIFIER) {
       // TODO: gather identifiers with the same name
-      return Token{type, info_.GetSpan(word.length()), {word}};
+      return Token{type, info_.GetSpan(word.length()), {word[0]}};
     } else {
       return Token{type, info_.GetSpan(word.length()), {0}};
     }
