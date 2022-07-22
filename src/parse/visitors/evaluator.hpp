@@ -10,10 +10,10 @@ class Evaluator : public ReturnVisitor<SBObject> {
 
     switch (node->operator_.type) {
        case lex::TokenType::EQ:
-         return_value = PrimitiveType{lhs == rhs};
+         return_value = {PrimitiveType{lhs == rhs}};
          break;
        case lex::TokenType::LT:
-         return_value = PrimitiveType{lhs < rhs};
+         return_value = {PrimitiveType{lhs < rhs}};
          break;
        default:
          std::abort();   
@@ -54,6 +54,7 @@ class Evaluator : public ReturnVisitor<SBObject> {
 
   virtual void VisitLiteral(LiteralExpression* lit) {
     auto val = lit->token_.sem_info;
-    return_value = SBObject{PrimitiveType{val}};
+    return_value = {PrimitiveType{val}};
   }
+
 };

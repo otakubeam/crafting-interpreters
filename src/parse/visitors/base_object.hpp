@@ -5,39 +5,37 @@
 
 //////////////////////////////////////////////////////////////////////
 
-struct PrimitiveType {
+using PrimitiveType = 
   std::variant<        //
       std::nullptr_t,  //
       int,             //
       bool,            //
       char             //
-      >
-      ty_;
-};
+      >;
 
 //////////////////////////////////////////////////////////////////////
 
 inline PrimitiveType plus(PrimitiveType one, PrimitiveType two) {
-  auto int_one = std::get<int>(one.ty_);
-  auto int_two = std::get<int>(two.ty_);
+  auto int_one = std::get<int>(one);
+  auto int_two = std::get<int>(two);
   return {int_one + int_two};
 }
 
 inline PrimitiveType minus(PrimitiveType one, PrimitiveType two) {
-  auto int_one = std::get<int>(one.ty_);
-  auto int_two = std::get<int>(two.ty_);
+  auto int_one = std::get<int>(one);
+  auto int_two = std::get<int>(two);
   return {int_one - int_two};
 }
 
 //////////////////////////////////////////////////////////////////////
 
 inline PrimitiveType bang(PrimitiveType one) {
-  auto int_one = std::get<bool>(one.ty_);
+  auto int_one = std::get<bool>(one);
   return {!int_one};
 }
 
 inline PrimitiveType negate(PrimitiveType one) {
-  auto int_one = std::get<int>(one.ty_);
+  auto int_one = std::get<int>(one);
   return {-int_one};
 }
 
