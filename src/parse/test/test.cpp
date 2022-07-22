@@ -4,9 +4,12 @@
 #include <parse/parse.hpp>
 
 #include <fmt/core.h>
-#include <iostream>
 
-bool TestEvaluator() {
+// Finally,
+#define CATCH_CONFIG_MAIN
+#include <catch2/catch.hpp>
+
+TEST_CASE( "Factorials are computed", "[ast]" ) {
 
   lex::Location loc_dummy;
   auto ty = lex::TokenType::NUMBER;
@@ -28,12 +31,10 @@ bool TestEvaluator() {
   auto result1 = GetPrim<int>(e.Eval(&bin1));
   fmt::print("Result is {}, expected is {}\n", result1, -1);
 
+  REQUIRE(result1 < 0);
+
   auto result2 = GetPrim<int>(e.Eval(&bin2));
   fmt::print("Result is {}, expected is {}\n", result2, -2);
 
-  return true;
-}
-
-int main() {
-   TestEvaluator();
+  REQUIRE(result2 == -2);
 }
