@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 3.23)
 project(interpreter)
 
 # --------------------------------------------------------------------
@@ -8,7 +9,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_compile_options(-Wall -Wextra -Wpedantic -g -fno-omit-frame-pointer)
+add_compile_options(-O1 -Wall -Wextra -Wpedantic -g -fno-omit-frame-pointer)
 
 find_package(fmt)
 find_package(Catch2 2 REQUIRED)
