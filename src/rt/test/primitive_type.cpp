@@ -1,4 +1,4 @@
-#include <rt/base_object.hpp>
+#include <rt/primitive_type.hpp>
 
 // Finally,
 #include <catch2/catch.hpp>

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <ast/visitors/template_visitor.hpp>
 #include <ast/syntax_tree.hpp>
 

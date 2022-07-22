@@ -65,3 +65,14 @@ inline SBObject negate(SBObject one) {
 }
 
 //////////////////////////////////////////////////////////////////////
+
+inline std::string Format(SBObject object) {
+  try {
+    PrimitiveType prim_operand = std::get<PrimitiveType>(object);
+    return Format(prim_operand);
+  } catch (std::bad_variant_access&) {
+    throw TypeError{};
+  }
+}
+
+//////////////////////////////////////////////////////////////////////

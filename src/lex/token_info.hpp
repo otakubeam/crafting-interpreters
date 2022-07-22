@@ -1,5 +1,7 @@
 #pragma once
 
+#include <lex/token_type.hpp>
+
 #include <variant>
 #include <string>
 
@@ -7,52 +9,8 @@ namespace lex {
 
 //////////////////////////////////////////////////////////////////////
 
-// There is no behaviour to a token,
-// so it doesn't make sense for it to be
-// a class with virtual methods and such
-
-enum class TokenType {
-  NUMBER,
-  STRING,
-  IDENTIFIER,
-
-  // TODO:
-  TRUE,
-  FALSE,
-
-  PLUS,
-  MINUS,
-
-  EQ,
-  LT,
-
-  LEFT_BRACE,
-  RIGHT_BRACE,
-
-  NOT,
-
-  PRINT,
-  FUN,  // FUN foo
-  VAR,  // VAR name
-
-  IF,
-  FOR,
-
-  COLUMN,
-
-  // These only change the location info of the lexer
-  TOKEN_EOL,
-  TOKEN_EOF,
-};
-
-//////////////////////////////////////////////////////////////////////
-
 struct Location {
   int file = 0;
-
-  // What token can span more that a line?
-  // None, right?
-
   int lineno = 0;
   int columnno = 0;
 };
