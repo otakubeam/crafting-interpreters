@@ -26,10 +26,10 @@ class Evaluator : public ReturnVisitor<SBObject> {
 
     switch (node->operator_.type) {
        case lex::TokenType::PLUS:
-          return_value = plus(rhs, lhs);
+          return_value = plus(lhs, rhs);
           break;
        case lex::TokenType::MINUS:
-          return_value = minus(rhs, lhs);
+          return_value = minus(lhs, rhs);
           break;
        default:
           std::abort();
