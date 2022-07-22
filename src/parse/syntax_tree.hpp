@@ -1,8 +1,8 @@
 #pragma once
 
-#include <parse/Visitor.hpp>
+#include <parse/visitor.hpp>
 
-#include <lex/TokenInfo.hpp>
+#include <lex/token_info.hpp>
 
 //////////////////////////////////////////////////////////////////////
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <parse/Visitor.hpp>
-#include <parse/SyntaxTree.hpp>
+#include <parse/visitor.hpp>
+#include <parse/syntax_tree.hpp>
 
 template <typename T>
 class ReturnVisitor {

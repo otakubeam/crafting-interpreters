@@ -1,8 +1,7 @@
 #pragma once
 
-#include <lex/LexerStrCmp.hpp>
-#include <lex/IdentTable.hpp>
-#include <lex/TokenInfo.hpp>
+#include <lex/ident_table.hpp>
+#include <lex/lexer_aux.hpp>
 
 #include <optional>
 #include <string>

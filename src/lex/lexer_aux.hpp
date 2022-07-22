@@ -1,6 +1,6 @@
 #pragma once
 
-#include <lex/TokenInfo.hpp>
+#include <lex/token_info.hpp>
 
 #include <optional>
 

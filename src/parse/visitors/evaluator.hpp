@@ -1,4 +1,4 @@
-#include <parse/SyntaxTree.hpp>
+#include <parse/syntax_tree.hpp>
 
 class Evaluator : public Visitor {
  public:

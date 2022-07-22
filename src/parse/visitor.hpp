@@ -1,6 +1,6 @@
 #pragma once
 
-#include <parse/visitors/BaseObject.hpp>
+#include <parse/visitors/base_object.hpp>
 
 //////////////////////////////////////////////////////////////////////
 
