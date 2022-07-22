@@ -1,119 +1,67 @@
 #pragma once
 
-#include <cstdint>
-#include <variant>
+#include <rt/user_defined_type.hpp>
+#include <rt/primitive_type.hpp>
+#include <rt/type_error.hpp>
 
 //////////////////////////////////////////////////////////////////////
 
-using PrimitiveType = 
-  std::variant<        //
-      std::nullptr_t,  //
-      int,             //
-      bool,            //
-      char             //
-      >;
+using SBObject = std::variant<  //
+    PrimitiveType,              //
+    UserDefinedType*            //
+    >;
 
 //////////////////////////////////////////////////////////////////////
 
-inline PrimitiveType plus(PrimitiveType one, PrimitiveType two) {
-  auto int_one = std::get<int>(one);
-  auto int_two = std::get<int>(two);
-  return {int_one + int_two};
-}
-
-inline PrimitiveType minus(PrimitiveType one, PrimitiveType two) {
-  auto int_one = std::get<int>(one);
-  auto int_two = std::get<int>(two);
-  return {int_one - int_two};
-}
-
-//////////////////////////////////////////////////////////////////////
-
-inline PrimitiveType bang(PrimitiveType one) {
-  auto int_one = std::get<bool>(one);
-  return {!int_one};
-}
-
-inline PrimitiveType negate(PrimitiveType one) {
-  auto int_one = std::get<int>(one);
-  return {-int_one};
-}
-
-//////////////////////////////////////////////////////////////////////
-
-struct UserDefinedType {
-  // TODO: Declaration object
-  uint64_t* data = nullptr;
-};
-
-//////////////////////////////////////////////////////////////////////
-
-using SBObject  =
-  std::variant<         //
-      PrimitiveType,    //
-      UserDefinedType*  //
-      >;
-
-template<typename T>
+template <typename T>
 inline T GetPrim(const SBObject& object) {
-   auto prim = std::get<PrimitiveType>(object);
-   return std::get<T>(prim);
+  auto prim = std::get<PrimitiveType>(object);
+  return std::get<T>(prim);
 }
 
-template<typename T>
+template <typename T>
 inline SBObject FromPrim(T value) {
-   return SBObject{PrimitiveType{value}};
+  return SBObject{PrimitiveType{value}};
 }
 
 //////////////////////////////////////////////////////////////////////
 
-// What do I allow for a type?
+inline SBObject BinaryOp(char op_type, SBObject lhs, SBObject rhs) {
+  try {
+    auto prim_one = std::get<PrimitiveType>(lhs);
+    auto prim_two = std::get<PrimitiveType>(rhs);
+    return {BinaryOp(op_type, prim_one, prim_two)};
+  } catch (std::bad_variant_access&) {
+    throw TypeError{};
+  }
+}
 
 inline SBObject plus(SBObject one, SBObject two) {
-  switch (one.index()) {
-    case 0: {
-      auto prim_one = std::get<PrimitiveType>(one);
-      auto prim_two = std::get<PrimitiveType>(two);
-      return {plus(prim_one, prim_two)};
-    }
-    default:
-      throw "Cannot UDTs";
-  }
+  return BinaryOp('+', one, two);
 }
 
 inline SBObject minus(SBObject one, SBObject two) {
-  switch (one.index()) {
-    case 0: {
-      auto prim_one = std::get<PrimitiveType>(one);
-      auto prim_two = std::get<PrimitiveType>(two);
-      return {minus(prim_one, prim_two)};
-    }
-    case 1:
-    default:
-      throw "Cannot UDTs";
-  }
+  return BinaryOp('-', one, two);
 }
 
 //////////////////////////////////////////////////////////////////////
 
-inline SBObject bang(SBObject one) {
-  switch (one.index()) {
-    case 0:
-      return {bang(std::get<0>(one))};
-    case 1:
-    default:
-      throw "Cannot UDTs";
+inline SBObject UnaryOp(char op_type, SBObject operand) {
+  try {
+    PrimitiveType prim_operand = std::get<PrimitiveType>(operand);
+    return {op_type == '!' ? Bang(prim_operand)  //
+                           : Negate(prim_operand)};
+  } catch (std::bad_variant_access&) {
+    throw TypeError{};
   }
 }
 
+inline SBObject bang(SBObject one) {
+  return UnaryOp('!', one);
+}
+
 inline SBObject negate(SBObject one) {
-  switch (one.index()) {
-    case 0:
-      return {negate(std::get<0>(one))};
-    case 1:
-    default:
-      throw "Cannot UDTs";
-  }
+  return UnaryOp('-', one);
 }
 
 //////////////////////////////////////////////////////////////////////
