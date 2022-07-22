@@ -14,6 +14,8 @@ class Parser {
     while (token.type != lex::TokenType::TOKEN_EOF) {
     }
 
+    std::abort();
+
     return new Expression{};
   }
 

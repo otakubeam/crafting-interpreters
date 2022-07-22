@@ -2,7 +2,10 @@
 
 class Evaluator : public Visitor {
  public:
-  virtual SBObject VisitComparison(ComparisonExpression* node) = 0;
+
+    // Of course visit cannot return SBObject
+
+     virtual void VisitComparison(ComparisonExpression* node) = 0;
 
   virtual SBObject VisitBinary(BinaryExpression* node) = 0;
 

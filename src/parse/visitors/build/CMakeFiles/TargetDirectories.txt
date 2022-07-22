@@ -1,5 +1,0 @@
-/home/va/0-crafting-interpreters/src/parse/visitors/build/CMakeFiles/lex.dir
-/home/va/0-crafting-interpreters/src/parse/visitors/build/CMakeFiles/parse.dir
-/home/va/0-crafting-interpreters/src/parse/visitors/build/CMakeFiles/parse_test.dir
-/home/va/0-crafting-interpreters/src/parse/visitors/build/CMakeFiles/edit_cache.dir
-/home/va/0-crafting-interpreters/src/parse/visitors/build/CMakeFiles/rebuild_cache.dir

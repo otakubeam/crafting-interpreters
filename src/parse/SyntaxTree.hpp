@@ -15,7 +15,7 @@ class TreeNode {
 
 class Expression : public TreeNode {
  public:
-  virtual void Accept(Visitor* visitor) = 0;
+  virtual void Accept(Visitor* /* visitor */) {};
 };
 
 //////////////////////////////////////////////////////////////////////

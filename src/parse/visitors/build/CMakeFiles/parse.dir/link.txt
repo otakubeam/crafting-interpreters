@@ -1,2 +1,0 @@
-/usr/bin/ar qc libparse.a CMakeFiles/parse.dir/parse/Unit.o CMakeFiles/parse.dir/parse/test/test.o CMakeFiles/parse.dir/CMakeFiles/3.23.2/CompilerIdCXX/CMakeCXXCompilerId.o
-/usr/bin/ranlib libparse.a

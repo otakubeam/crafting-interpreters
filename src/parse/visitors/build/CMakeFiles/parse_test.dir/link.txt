@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic CMakeFiles/parse_test.dir/parse/test/test.o -o bin/parse_test  liblex.a libparse.a 
