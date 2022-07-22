@@ -9,7 +9,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_compile_options(-O1 -Wall -Wextra -Wpedantic -g -fno-omit-frame-pointer)
+add_compile_options(-Wall -Wextra -Wpedantic -g -fno-omit-frame-pointer)
 
 find_package(fmt)
 find_package(Catch2 2 REQUIRED)
@@ -34,6 +34,10 @@ endfunction()
 # --------------------------------------------------------------------
 
 add_task_library(lex)
+
+add_task_library(rt)
+
+add_task_library(ast)
 
 add_task_library(parse)
 
@@ -67,5 +71,12 @@ endfunction()
 
 # --------------------------------------------------------------------
 
+add_task_test_dir(lex)
+
+add_task_test_dir(ast)
+
+add_task_test_dir(rt)
+
 add_task_test_dir(parse)
 
+# --------------------------------------------------------------------

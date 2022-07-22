@@ -38,6 +38,8 @@ enum class TokenType {
   IF,
   FOR,
 
+  COLUMN,
+
   // These only change the location info of the lexer
   TOKEN_EOL,
   TOKEN_EOF,

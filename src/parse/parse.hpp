@@ -1,6 +1,6 @@
 #pragma once
 
-#include <parse/syntax_tree.hpp>
+#include <ast/syntax_tree.hpp>
 
 #include <lex/lexer.hpp>
 

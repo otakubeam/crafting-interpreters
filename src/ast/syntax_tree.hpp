@@ -1,6 +1,6 @@
 #pragma once
 
-#include <parse/visitor.hpp>
+#include <ast/visitors/visitor.hpp>
 
 #include <lex/token_info.hpp>
 
