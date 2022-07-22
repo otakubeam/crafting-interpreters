@@ -3,5 +3,5 @@
 #include <string>
 
 struct TypeError {
-   std::string message;
+  std::string message;
 };

@@ -5,12 +5,12 @@
 
 template <typename T>
 class ReturnVisitor : public Visitor {
-   public:
-      T Eval(Expression* expr) {
-         expr->Accept(this);
-         return return_value;
-      }
+ public:
+  T Eval(Expression* expr) {
+    expr->Accept(this);
+    return return_value;
+  }
 
-   protected:
-      T return_value;
+ protected:
+  T return_value;
 };
