@@ -19,7 +19,8 @@ TEST_CASE("Just works", "[parser]") {
   // };
 
   PrintingVisitor v;
-
-  fmt::print("{}\n", v.Eval(p.ParsePrimary()));
-  fmt::print("{}\n", v.Eval(p.ParseUnary()));
+  auto pr = p.ParsePrimary();
+  INFO("Hello world");
+  fmt::print("{}\n", v.Eval(pr));
+  // fmt::print("{}\n", v.Eval(p.ParseUnary()));
 }

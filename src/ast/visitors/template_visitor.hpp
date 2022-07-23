@@ -7,6 +7,9 @@ template <typename T>
 class ReturnVisitor : public Visitor {
  public:
   T Eval(Expression* expr) {
+    FMT_ASSERT(expr,
+               "\nError: "
+               "Evaluating null expression \n");
     expr->Accept(this);
     return return_value;
   }

@@ -101,7 +101,7 @@ class Parser {
   // These are named for the grammar rules!
   // It's ok
   Expression* ParsePrimary() {
-    auto token = lexer_.Peek();
+    auto token = lexer_.Advance();
 
     switch (token.type) {
       case lex::TokenType::NUMBER:
@@ -122,6 +122,7 @@ class Parser {
         }
 
       default:
+        UNSCOPED_INFO("Could not match anything in Primary Rule");
         // TODO: report errors
         break;
     }
