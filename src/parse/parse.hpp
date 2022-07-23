@@ -50,7 +50,7 @@ class Parser {
       if (auto snd = ParseUnary()) {
         fst = new BinaryExpression(fst, token, snd);
       } else {
-        throw "Parse Error: Incomplete Binary Expression";
+        throw "Parse error: Incomplete Binary Expression";
       }
     }
 
@@ -66,7 +66,7 @@ class Parser {
       if (auto expr = ParsePrimary()) {
         return new UnaryExpression{token, expr};
       } else {
-        throw "Parse Error: could not parse primary starting with minus";
+        throw "Parse error: could not parse primary starting with minus";
       }
     }
 
@@ -109,15 +109,12 @@ class Parser {
         std::abort();
 
       default:
-        UNSCOPED_INFO("Could not match anything in Primary Rule");
+        throw "Parse error: "
+               "Could not match primary expression\n";
         break;
     }
 
-    // Check and return ready result
-
-    FMT_ASSERT(result,
-               "\nError: "
-               "Could not match primary expression\n");
+    // Advance for all the base cases and return
 
     lexer_.Advance();
     return result;

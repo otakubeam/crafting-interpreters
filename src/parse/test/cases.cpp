@@ -48,3 +48,29 @@ TEST_CASE("Grouping", "[parser]") {
 }
 
 //////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Misleading minus", "[parser]") {
+  char stream[] = "-1 -2";
+  Parser p{lex::Lexer{stream}};
+
+  Evaluator e;
+  CHECK(e.Eval(p.ParseExpression()) == FromPrim(-3));
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("No left bracket", "[parser]") {
+  char stream[] = "1 - (1 + 2";
+  Parser p{lex::Lexer{stream}};
+  CHECK_THROWS(p.ParseExpression());
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("No braced expression", "[parser]") {
+  char stream[] = "()";
+  Parser p{lex::Lexer{stream}};
+  CHECK_THROWS(p.ParseExpression());
+}
+
+//////////////////////////////////////////////////////////////////////
