@@ -8,6 +8,9 @@
 
 class Parser {
  public:
+  Parser(lex::Lexer l) : lexer_{l} {
+  }
+
   Expression* ParseExpression() {
     auto token = lexer_.GetNextToken();
 
@@ -79,8 +82,10 @@ class Parser {
         }
 
       default:
-        throw "Could not parse? In MY predictive parser???";
+        break;
     }
+
+    throw "Could not parse? In MY predictive parser???";
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -110,11 +115,17 @@ class Parser {
 
       default:
         // TODO: report errors
-        return nullptr;
+        break;
     }
+
+    return nullptr;
   }
 
   ////////////////////////////////////////////////////////////////////
+ public:
+  bool SelfTest() {
+    return true;
+  }
 
  private:
   lex::Lexer lexer_;
