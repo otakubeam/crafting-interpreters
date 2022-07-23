@@ -15,7 +15,7 @@ namespace lex {
 class Lexer {
  public:
   Lexer(char* stream) : info_{stream} {
-    Advance();
+    Advance();  // so that it starts in a valid state for Peek()
   }
 
   ////////////////////////////////////////////////////////////////////
