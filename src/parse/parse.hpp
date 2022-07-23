@@ -6,46 +6,28 @@
 
 #include <catch2/catch.hpp>
 
-#include <vector>
-
 class Parser {
  public:
   Parser(lex::Lexer l) : lexer_{l} {
   }
 
   Expression* ParseExpression() {
-    auto token = lexer_.GetNextToken();
-
-    while (token.type != lex::TokenType::TOKEN_EOF) {
-    }
-
-    std::abort();
-
-    return new Expression{};
-  }
-
-  ////////////////////////////////////////////////////////////////////
-
-  // Only for syntactic ones
-  bool Matches(lex::TokenType type) {
-    if (lexer_.Peek().type != type) {
-      return false;
-    }
-
-    lexer_.Advance();
-    return true;
+    return ParseComparison();
   }
 
   ////////////////////////////////////////////////////////////////////
 
   Expression* ParseComparison() {
     Expression* fst = ParseBinary();
-    auto tk = lexer_.Peek();
+
+    UNSCOPED_INFO("Parsing the rest of comparison");
 
     using lex::TokenType;
+    auto token = lexer_.Peek();
+
     while (Matches(TokenType::LT)) {
       if (auto snd = ParseBinary()) {
-        fst = new ComparisonExpression(fst, tk, snd);
+        fst = new ComparisonExpression(fst, token, snd);
       } else {
         throw "Incomplete Comparison Expression";
       }
@@ -59,16 +41,16 @@ class Parser {
   Expression* ParseBinary() {
     Expression* fst = ParseUnary();
 
-    UNSCOPED_INFO("Parsing the rest");
+    UNSCOPED_INFO("Parsing the rest of Binary");
 
     using lex::TokenType;
-    auto tk = lexer_.Peek();
+    auto token = lexer_.Peek();
 
     while (Matches(TokenType::PLUS) || Matches(TokenType::MINUS)) {
       if (auto snd = ParseUnary()) {
-        fst = new BinaryExpression(fst, tk, snd);
+        fst = new BinaryExpression(fst, token, snd);
       } else {
-        throw "Incomplete Binary Expression";
+        throw "Parse Error: Incomplete Binary Expression";
       }
     }
 
@@ -99,8 +81,6 @@ class Parser {
   ////////////////////////////////////////////////////////////////////
 
   Expression* ParsePrimary() {
-    auto token = lexer_.Peek();
-
     Expression* result = nullptr;
 
     // Try parsing grouping first
@@ -108,14 +88,16 @@ class Parser {
     if (Matches(lex::TokenType::LEFT_BRACE)) {
       if (auto expr = ParseExpression()) {
         if (Matches(lex::TokenType::RIGHT_BRACE)) {
-          result = expr;
+          return expr;
         }
         throw "Parse error: missing right brace";
       }
       throw "Parse error: missing braced expression";
     }
 
-    // Then all the other base cases
+    // Then all the base cases
+
+    auto token = lexer_.Peek();
 
     switch (token.type) {
       case lex::TokenType::NUMBER:
@@ -131,6 +113,8 @@ class Parser {
         break;
     }
 
+    // Check and return ready result
+
     FMT_ASSERT(result,
                "\nError: "
                "Could not match primary expression\n");
@@ -139,10 +123,13 @@ class Parser {
     return result;
   }
 
-  /////////////////////////////////////////////////////////////////////
+ private:
+  bool Matches(lex::TokenType type) {
+    if (lexer_.Peek().type != type) {
+      return false;
+    }
 
- public:
-  bool SelfTest() {
+    lexer_.Advance();
     return true;
   }
 
