@@ -2,18 +2,25 @@
 
 #include <lex/token_type.hpp>
 
-#include <variant>
-#include <string>
+#include <filesystem>
 
 namespace lex {
 
 //////////////////////////////////////////////////////////////////////
 
 struct Location {
-  int file = 0;
-  int lineno = 0;
-  int columnno = 0;
+  size_t lineno = 0;
+  size_t columnno = 0;
 };
+
+//////////////////////////////////////////////////////////////////////
+
+struct SpanLines {
+  Location start;
+  size_t span_number;
+};
+
+//////////////////////////////////////////////////////////////////////
 
 struct ScanInfo {
  public:
@@ -28,7 +35,8 @@ struct ScanInfo {
         break;
 
       case EOF:
-        loc.file = -1;
+        // End stop
+        // Don't support several files
         break;
 
       default:
@@ -40,41 +48,13 @@ struct ScanInfo {
     return stream_buf[loc.columnno];
   }
 
-  Location GetSpan(size_t length) const {
-    auto result = loc;
-
-    // TODO: get an actual span
-    result.columnno -= length;
-
-    return result;
+  Location GetLocation() const {
+    return loc;
   }
 
  private:
   char* stream_buf = 0;
   Location loc;
-};
-
-//////////////////////////////////////////////////////////////////////
-
-struct String {
-  char* str = 0;
-  size_t length = 0;
-};
-
-struct Token {
-  TokenType type;
-
-  Location loc;
-
-  std::variant<        //
-      std::nullptr_t,  //
-      int,             //
-      bool,            //
-      char             //
-      >
-      sem_info{0};
-
-  // TODO: optional identifier
 };
 
 //////////////////////////////////////////////////////////////////////

@@ -2,13 +2,13 @@
 
 #include <lex/ident_table.hpp>
 #include <lex/lexer_aux.hpp>
-
-#include <optional>
-#include <string>
-#include <cstdio>
+#include <lex/token.hpp>
 
 #include <catch2/catch.hpp>
 #include <fmt/format.h>
+
+#include <optional>
+#include <string>
 
 namespace lex {
 
@@ -24,16 +24,14 @@ class Lexer {
     SkipWhitespace();
 
     if (auto op = MatchOperators()) {
-      UNSCOPED_INFO("Return oper\n");
       return *op;
     }
 
     if (auto lit = MatchLiterls()) {
-      UNSCOPED_INFO("Return literal\n");
       return *lit;
     }
 
-    if (auto word = MatchKeywords()) {
+    if (auto word = MatchWords()) {
       return *word;
     }
 
@@ -65,7 +63,7 @@ class Lexer {
   std::optional<Token> MatchOperators() {
     if (auto type = MatchSingleWidthOperator(info_.CurrentSymbol())) {
       info_.MoveRight();
-      return Token{*type, info_.GetSpan(1), {0}};
+      return Token{*type, info_.GetLocation()};
     }
 
     return std::nullopt;
@@ -75,8 +73,6 @@ class Lexer {
 
   std::optional<Token> MatchLiterls() {
     if (auto num_token = MatchNumericLiteral()) {
-      UNSCOPED_INFO("Return numeric\n");
-
       return num_token;
     }
 
@@ -91,10 +87,6 @@ class Lexer {
     int result = 0, match_span = 0;
 
     while (isdigit(info_.CurrentSymbol())) {
-      UNSCOPED_INFO(                                  //
-          fmt::format("CurrentSymbol {} is a digit",  //
-                      info_.CurrentSymbol()));
-
       result *= 10;
       result += info_.CurrentSymbol() - '0';
 
@@ -106,28 +98,45 @@ class Lexer {
       return std::nullopt;
     }
 
-    return Token{TokenType::NUMBER, info_.GetSpan(match_span), {result}};
+    return Token{TokenType::NUMBER, info_.GetLocation(), {result}};
   }
 
   std::optional<Token> MatchStringLiteral() {
-    if (info_.CurrentSymbol() != '\"') {
+    auto first_quote = [](char first) -> bool {
+      return first == '\"';
+    };
+
+    if (!first_quote(info_.CurrentSymbol())) {
       return std::nullopt;
     }
 
     // It matched! Now do match the whole string
 
-    info_.MoveRight();
     std::string lit;
+    info_.MoveRight();
 
     while (info_.CurrentSymbol() != '\"') {
       lit.push_back(info_.CurrentSymbol());
       info_.MoveRight();
     }
 
-    return Token{TokenType::STRING, info_.GetSpan(lit.length()), {lit[0]}};
+    return Token{TokenType::STRING, info_.GetLocation(), {lit[0]}};
   }
 
   ////////////////////////////////////////////////////////////////////
+
+  std::optional<Token> MatchWords() {
+    auto word = BufferWord();
+    auto type = table_.LookupOrInsert(word);
+
+    if (type == TokenType::IDENTIFIER) {
+      // TODO: gather identifiers with the same name
+      return Token{type, info_.GetLocation(), {word[0]}};
+    } else {
+      // So it must be a keyword with the exact type encoded in `type`
+      return Token{type, info_.GetLocation(), {0}};
+    }
+  }
 
   std::string BufferWord() {
     std::string result;
@@ -140,23 +149,12 @@ class Lexer {
     return result;
   }
 
-  std::optional<Token> MatchKeywords() {
-    auto word = BufferWord();
-    auto type = table_.LookupOrInsert(word);
-    if (type == TokenType::IDENTIFIER) {
-      // TODO: gather identifiers with the same name
-      return Token{type, info_.GetSpan(word.length()), {word[0]}};
-    } else {
-      return Token{type, info_.GetSpan(word.length()), {0}};
-    }
-  }
-
   ////////////////////////////////////////////////////////////////////
 
  private:
   Token peek_{};
   ScanInfo info_;
-  IdentTable table_{};
+  IdentTable table_;
 };
 
 }  // namespace lex

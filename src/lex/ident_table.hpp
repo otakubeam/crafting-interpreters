@@ -1,6 +1,6 @@
 #pragma once
 
-#include <lex/token_info.hpp>
+#include <lex/token_type.hpp>
 
 #include <string>
 #include <map>
@@ -13,19 +13,20 @@ class IdentTable {
     Populate();
   }
 
+  TokenType LookupOrInsert(const std::string& lexeme) {
+    if (!map_.contains(lexeme)) {
+      map_.insert({lexeme, TokenType::IDENTIFIER});
+    }
+    return map_[lexeme];
+  }
+
+ private:
   void Populate() {
     map_.insert({"print", TokenType::PRINT});
     map_.insert({"var", TokenType::VAR});
     map_.insert({"fun", TokenType::FUN});
     map_.insert({"for", TokenType::FOR});
     map_.insert({"if", TokenType::IF});
-  }
-
-  TokenType LookupOrInsert(const std::string& lexeme) {
-    if (!map_.contains(lexeme)) {
-      map_.insert({lexeme, TokenType::IDENTIFIER});
-    }
-    return map_[lexeme];
   }
 
  private:

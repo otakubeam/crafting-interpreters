@@ -2,7 +2,7 @@
 
 #include <ast/visitors/visitor.hpp>
 
-#include <lex/token_info.hpp>
+#include <lex/token.hpp>
 
 //////////////////////////////////////////////////////////////////////
 
