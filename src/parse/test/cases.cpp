@@ -20,6 +20,6 @@ TEST_CASE("Just works", "[parser]") {
 
   PrintingVisitor v;
 
-  v.Eval(p.ParsePrimary());
-  v.Eval(p.ParseUnary());
+  fmt::print("{}\n", v.Eval(p.ParsePrimary()));
+  fmt::print("{}\n", v.Eval(p.ParseUnary()));
 }

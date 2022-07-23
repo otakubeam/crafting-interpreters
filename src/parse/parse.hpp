@@ -4,6 +4,8 @@
 
 #include <lex/lexer.hpp>
 
+#include <catch2/catch.hpp>
+
 #include <vector>
 
 class Parser {
@@ -56,9 +58,11 @@ class Parser {
 
   Expression* ParseBinary() {
     Expression* fst = ParseUnary();
-    auto tk = lexer_.Peek();
-    using lex::TokenType;
 
+    UNSCOPED_INFO("Parsing the rest");
+
+    using lex::TokenType;
+    auto tk = lexer_.Peek();
     while (Matches(TokenType::PLUS) || Matches(TokenType::MINUS)) {
       if (auto snd = ParseUnary()) {
         fst = new BinaryExpression(fst, tk, snd);
@@ -81,7 +85,11 @@ class Parser {
           return new UnaryExpression{token, expr};
         }
 
+      // Then it must be primary
       default:
+        if (auto expr = ParsePrimary()) {
+          return expr;
+        }
         break;
     }
 
