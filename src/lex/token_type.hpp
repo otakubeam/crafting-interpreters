@@ -74,7 +74,8 @@ enum class TokenType {
   case TokenType::type:          \
     return #type;
 
-const char* FormatTokenType(TokenType type) {
+// There are just several places where this is used
+inline const char* FormatTokenType(TokenType type) {
   switch (type) {
     AST_NODE_LIST(DEFINE_TYPE_STRING)
     default:
