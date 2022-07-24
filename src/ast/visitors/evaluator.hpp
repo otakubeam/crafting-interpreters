@@ -94,6 +94,12 @@ class Evaluator : public ReturnVisitor<SBObject> {
 
   virtual void VisitLiteral(LiteralExpression* lit) override {
     switch (lit->token_.type) {
+      case lex::TokenType::IDENTIFIER: {
+        auto name = std::get<std::string>(lit->token_.sem_info);
+        return_value = state_.at(name);
+        break;
+      }
+
       case lex::TokenType::TRUE:
         return_value = {PrimitiveType{true}};
         break;

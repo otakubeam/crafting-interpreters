@@ -67,16 +67,81 @@ TEST_CASE("Print tree", "[ast]") {
 
 //////////////////////////////////////////////////////////////////////
 
-TEST_CASE("Keep state", "[ast]") {
+TEST_CASE("Variable decalration", "[ast]") {
   char stream[] = "var x = 5;";
-
   Parser p{lex::Lexer{stream}};
-  auto parsed = p.ParseStatement();
-
-  INFO("Parsed successfully");
 
   Evaluator e;
-  CHECK_NOTHROW(e.Eval(parsed));
+  CHECK_NOTHROW(e.Eval(p.ParseStatement()));
 }
 
 //////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Keep state", "[ast]") {
+  char stream[] =
+      "var x = 5;"  //
+      "x + x";
+  Parser p{lex::Lexer{stream}};
+
+  Evaluator e;
+  e.Eval(p.ParseStatement());
+  CHECK(e.Eval(p.ParseExpression()) == FromPrim(10));
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Multistate", "[ast]") {
+  char stream[] =
+      "var x = 5;"  //
+      "var y = 3;"  //
+      "x - y";
+  Parser p{lex::Lexer{stream}};
+
+  Evaluator e;
+  e.Eval(p.ParseStatement());
+  e.Eval(p.ParseStatement());
+  CHECK(e.Eval(p.ParseExpression()) == FromPrim(2));
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Initialize with variable", "[ast]") {
+  char stream[] =
+      "var x = 5;"  //
+      "var y = x;"  //
+      "x - y";
+  Parser p{lex::Lexer{stream}};
+
+  Evaluator e;
+  e.Eval(p.ParseStatement());
+  e.Eval(p.ParseStatement());
+  CHECK(e.Eval(p.ParseExpression()) == FromPrim(0));
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Overwrite", "[ast]") {
+  char stream[] =
+      "var x = 5;"  //
+      "var x = 4;"  //
+      "x";
+  Parser p{lex::Lexer{stream}};
+
+  Evaluator e;
+  e.Eval(p.ParseStatement());
+  e.Eval(p.ParseStatement());
+  CHECK(e.Eval(p.ParseExpression()) == FromPrim(4));
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Unknown variable", "[ast]") {
+  char stream[] =
+      "var x = 5;"  //
+      "y + x";
+  Parser p{lex::Lexer{stream}};
+
+  Evaluator e;
+  e.Eval(p.ParseStatement());
+  CHECK_THROWS(e.Eval(p.ParseExpression()));
+}

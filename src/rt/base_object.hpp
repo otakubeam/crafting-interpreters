@@ -66,7 +66,7 @@ inline SBObject Negate(SBObject one) {
 
 //////////////////////////////////////////////////////////////////////
 
-inline std::string Format(SBObject object) {
+inline std::string Format(const SBObject& object) {
   try {
     PrimitiveType prim_operand = std::get<PrimitiveType>(object);
     return Format(prim_operand);
@@ -75,4 +75,12 @@ inline std::string Format(SBObject object) {
   }
 }
 
-//////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+
+// For catch2 outputting meaningful objects
+inline std::ostream& operator<<(std::ostream& os,  //
+                                const SBObject& object) {
+  return os << Format(object);
+}
+
+/////////////////////////////////////////////////////////////////////
