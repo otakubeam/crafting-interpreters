@@ -24,6 +24,7 @@ struct SpanLines {
 
 struct ScanInfo {
  public:
+  // TODO: Accept file or cosequtive line from std as input stream
   ScanInfo(char* new_buffer) : stream_buf{new_buffer} {
   }
 
@@ -42,6 +43,15 @@ struct ScanInfo {
       default:
         loc.columnno += 1;
     }
+  }
+
+  void MoveNextLine() {
+    while (CurrentSymbol() != '\n') {
+      MoveRight();
+    }
+
+    // Finally, move to the next line
+    MoveRight();
   }
 
   char CurrentSymbol() const {

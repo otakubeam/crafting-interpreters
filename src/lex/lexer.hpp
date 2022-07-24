@@ -58,6 +58,18 @@ class Lexer {
     }
   }
 
+  // TODO: waiting until I can work with files
+
+  // void SkipComments() {
+  //   while (info_.CurrentSymbol() == '#') {
+  //     UNSCOPED_INFO(fmt::format(  //
+  //         "CurrentSymbol is {}", info_.CurrentSymbol()));
+  //     info_.MoveNextLine();
+  //     UNSCOPED_INFO("Moved next line");
+  //     SkipWhitespace();
+  //   }
+  // }
+
   ////////////////////////////////////////////////////////////////////
 
   std::optional<Token> MatchOperators() {

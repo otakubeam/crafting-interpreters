@@ -30,7 +30,7 @@ TEST_CASE("Grouping", "[lex]") {
 ///////////////////////////////////////////////////////////////////
 
 TEST_CASE("Keywords", "[lex]") {
-  char stream[] = "var fun for if print";
+  char stream[] = "var fun for if else print true false";
   fmt::print("Hello world");
   lex::Lexer l{stream};
 
@@ -38,20 +38,22 @@ TEST_CASE("Keywords", "[lex]") {
   CHECK(l.Advance().type == lex::TokenType::FUN);
   CHECK(l.Advance().type == lex::TokenType::FOR);
   CHECK(l.Advance().type == lex::TokenType::IF);
+  CHECK(l.Advance().type == lex::TokenType::ELSE);
   CHECK(l.Advance().type == lex::TokenType::PRINT);
+  CHECK(l.Advance().type == lex::TokenType::TRUE);
+  CHECK(l.Advance().type == lex::TokenType::FALSE);
 }
 
 //////////////////////////////////////////////////////////////////////
-//
+
 // TEST_CASE("Comments", "[lex]") {
-//   // TODO: string literals inside comments?
-//   char stream[] = "// comment var a = 5 ; + - = fun // \n 1";
+//   char stream[] = "# Comment \n 1";
 //   lex::Lexer l{stream};
 //
 //   // parses to just `1`
 //   REQUIRE(l.Peek().type == lex::TokenType::NUMBER);
 // }
-//
+
 //////////////////////////////////////////////////////////////////////
 
 TEST_CASE("Statement", "[lex]") {
@@ -62,9 +64,7 @@ TEST_CASE("Statement", "[lex]") {
   CHECK(l.Advance().type == lex::TokenType::IDENTIFIER);
   CHECK(l.Advance().type == lex::TokenType::EQ);
   CHECK(l.Advance().type == lex::TokenType::NUMBER);
-
-  // TODO: Add COLUMN to lexer
-  // CHECK(l.Advance().type == lex::TokenType::COLUMN);
+  CHECK(l.Advance().type == lex::TokenType::SEMICOLUMN);
 }
 
 //////////////////////////////////////////////////////////////////////

@@ -11,7 +11,6 @@ enum class TokenType {
   STRING,
   IDENTIFIER,
 
-  // TODO:
   TRUE,
   FALSE,
 
