@@ -142,12 +142,12 @@ class Lexer {
     auto type = table_.LookupOrInsert(word);
 
     if (type == TokenType::IDENTIFIER) {
-      // TODO: gather identifiers with the same name
-      return Token{type, info_.GetLocation(), {word[0]}};
-    } else {
-      // So it must be a keyword with the exact type encoded in `type`
-      return Token{type, info_.GetLocation(), {0}};
+      return Token{type, info_.GetLocation(), {word}};
     }
+
+    // So it must be a keyword with the
+    // exact type encoded direcly in `type`
+    return Token{type, info_.GetLocation()};
   }
 
   std::string BufferWord() {
@@ -169,4 +169,4 @@ class Lexer {
   IdentTable table_;
 };
 
-}  // namespace lex
+}  //namespace lex

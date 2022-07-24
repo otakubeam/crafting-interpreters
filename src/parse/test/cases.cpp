@@ -62,9 +62,7 @@ TEST_CASE("Booleans", "[parser]") {
 TEST_CASE("Variable declaration", "[parser]") {
   char stream[] = "var x = 5;";
   Parser p{lex::Lexer{stream}};
-
-  Evaluator e;
-  CHECK_NOTHROW(e.Eval(p.ParseStatement()));
+  CHECK_NOTHROW(p.ParseStatement());
 }
 
 //////////////////////////////////////////////////////////////////////

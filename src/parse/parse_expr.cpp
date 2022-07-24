@@ -5,7 +5,7 @@
 Expression* Parser::ParseComparison() {
   Expression* fst = ParseBinary();
 
-  UNSCOPED_INFO("Parsing the rest of comparison");
+  UNSCOPED_INFO("Parsing the rest of Comparison");
 
   using lex::TokenType;
   auto token = lexer_.Peek();

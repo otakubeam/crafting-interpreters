@@ -67,8 +67,8 @@ class Parser {
     // 1. Get a name to assign to
 
     auto token = lexer_.Peek();
-    FMT_ASSERT(token.type == lex::TokenType::IDENTIFIER,
-               "Trying to assign to a non-identifier");
+
+    Consume(lex::TokenType::IDENTIFIER);
     auto lvalue = new LiteralExpression{std::move(token)};
 
     // 2. Get an expression to assign to
@@ -143,7 +143,7 @@ class Parser {
   }
 
   void Consume(lex::TokenType type) {
-    auto error_msg = fmt::format("Could not match type {}",  //
+    auto error_msg = fmt::format("\nCould not match type {}\n",  //
                                  lex::FormatTokenType(type));
     FMT_ASSERT(Matches(type), error_msg.c_str());
   }

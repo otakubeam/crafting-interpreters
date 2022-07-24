@@ -69,10 +69,14 @@ TEST_CASE("Print tree", "[ast]") {
 
 TEST_CASE("Keep state", "[ast]") {
   char stream[] = "var x = 5;";
+
   Parser p{lex::Lexer{stream}};
+  auto parsed = p.ParseStatement();
+
+  INFO("Parsed successfully");
 
   Evaluator e;
-  CHECK_NOTHROW(e.Eval(p.ParseStatement()));
+  CHECK_NOTHROW(e.Eval(parsed));
 }
 
 //////////////////////////////////////////////////////////////////////
