@@ -26,6 +26,8 @@ inline std::optional<TokenType> MatchSingleWidthOperator(char ch) {
       return TokenType::LEFT_BRACE;
     case ')':
       return TokenType::RIGHT_BRACE;
+    case ';':
+      return TokenType::SEMICOLUMN;
     default:
       return std::nullopt;
   }
