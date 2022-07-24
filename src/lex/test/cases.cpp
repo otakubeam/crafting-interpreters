@@ -77,3 +77,12 @@ TEST_CASE("Statement", "[lex]") {
 }
 
 //////////////////////////////////////////////////////////////////////
+
+TEST_CASE("String literal", "[lex]") {
+  char stream[] = "\"Hello world\"";
+  lex::Lexer l{stream};
+
+  CHECK(l.Peek().type == lex::TokenType::STRING);
+}
+
+//////////////////////////////////////////////////////////////////////

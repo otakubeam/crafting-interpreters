@@ -110,3 +110,21 @@ TEST_CASE("Expression statement", "[parser]") {
 // }
 
 //////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Parse string literal", "[parser]") {
+  char stream[] = " \"a\" + \"b\" ";
+  //                -----   -----
+  Parser p{lex::Lexer{stream}};
+  CHECK_NOTHROW(p.ParseExpression());
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Parse string literal (II)", "[parser]") {
+  char stream[] = "\"ab\"";
+  //                -----   -----
+  Parser p{lex::Lexer{stream}};
+  CHECK_NOTHROW(p.ParseExpression());
+}
+
+//////////////////////////////////////////////////////////////////////

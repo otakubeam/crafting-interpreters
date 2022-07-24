@@ -145,3 +145,15 @@ TEST_CASE("Unknown variable", "[ast]") {
   e.Eval(p.ParseStatement());
   CHECK_THROWS(e.Eval(p.ParseExpression()));
 }
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Eval string literal", "[ast]") {
+  char stream[] = " \"abc\"";
+  Parser p{lex::Lexer{stream}};
+
+  Evaluator e;
+  CHECK(e.Eval(p.ParseExpression()) == FromPrim('a'));
+}
+
+//////////////////////////////////////////////////////////////////////
