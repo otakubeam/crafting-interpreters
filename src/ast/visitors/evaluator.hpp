@@ -8,6 +8,8 @@
 #include <rt/primitive_type.hpp>
 #include <rt/base_object.hpp>
 
+#include <unordered_map>
+
 class Evaluator : public ReturnVisitor<SBObject> {
  public:
   virtual void VisitIf(IfStatement* node) override {
@@ -18,6 +20,13 @@ class Evaluator : public ReturnVisitor<SBObject> {
 
   virtual void VisitStatement(Statement* /* node */) override {
     FMT_ASSERT(false, "Visiting bare statement");
+  }
+
+  virtual void VisitVarDecl(VarDeclStatement* node) override {
+    // TODO: need a table to store the state
+    auto name = std::get<std::string>(node->lvalue_->token_.sem_info);
+    auto val = Eval(node->value_);
+    state_.emplace(name, val);
   }
 
   virtual void VisitExprStatement(ExprStatement* node) override {
@@ -126,4 +135,11 @@ class Evaluator : public ReturnVisitor<SBObject> {
         FMT_ASSERT(false, "\n Error: Non-exhaustive match \n");
     }
   }
+
+ private:
+  using Name = std::string;
+
+  std::unordered_map<Name, SBObject> state_;
 };
+
+//////////////////////////////////////////////////////////////////////

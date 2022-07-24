@@ -47,3 +47,20 @@ class ExprStatement : public Statement {
 };
 
 //////////////////////////////////////////////////////////////////////
+
+class VarDeclStatement : public Statement {
+ public:
+  VarDeclStatement(LiteralExpression* lvalue, Expression* value)
+      : lvalue_{lvalue}, value_{value} {
+  }
+
+  virtual void Accept(Visitor* visitor) override {
+    visitor->VisitVarDecl(this);
+  }
+
+  // TODO: TypeExpression* type_;
+  LiteralExpression* lvalue_;
+  Expression* value_;
+};
+
+//////////////////////////////////////////////////////////////////////

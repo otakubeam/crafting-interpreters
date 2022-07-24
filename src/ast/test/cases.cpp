@@ -3,6 +3,10 @@
 
 #include <rt/base_object.hpp>
 
+#include <parse/parse.hpp>
+
+#include <lex/lexer.hpp>
+
 #include <fmt/core.h>
 
 // Finally,
@@ -60,3 +64,15 @@ TEST_CASE("Print tree", "[ast]") {
 
   fmt::print("{}\n\n\n{}", result1, result2);
 }
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Keep state", "[ast]") {
+  char stream[] = "var x = 5;";
+  Parser p{lex::Lexer{stream}};
+
+  Evaluator e;
+  CHECK_NOTHROW(e.Eval(p.ParseStatement()));
+}
+
+//////////////////////////////////////////////////////////////////////

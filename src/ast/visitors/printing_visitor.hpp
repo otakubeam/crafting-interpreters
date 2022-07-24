@@ -17,6 +17,10 @@ class PrintingVisitor : public ReturnVisitor<std::string> {
     std::abort();
   }
 
+  virtual void VisitVarDecl(VarDeclStatement* /* node */) override {
+    std::abort();
+  }
+
   virtual void VisitExprStatement(ExprStatement*) override {
     std::abort();
   }

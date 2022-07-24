@@ -39,6 +39,8 @@ class Visitor {
 
   virtual void VisitStatement(Statement* node) = 0;
 
+  virtual void VisitVarDecl(VarDeclStatement* node) = 0;
+
   virtual void VisitExprStatement(ExprStatement* node) = 0;
 
   // Expressions

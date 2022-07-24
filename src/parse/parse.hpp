@@ -21,6 +21,10 @@ class Parser {
       return if_stmt;
     }
 
+    if (auto var_decl = ParseVarDeclStatement()) {
+      return var_decl;
+    }
+
     if (auto expr_stmt = ParseExprStatement()) {
       return expr_stmt;
     }
@@ -53,6 +57,30 @@ class Parser {
     }
 
     return new IfStatement(condition, true_branch, false_branch);
+  }
+
+  VarDeclStatement* ParseVarDeclStatement() {
+    if (!Matches(lex::TokenType::VAR)) {
+      return nullptr;
+    }
+
+    // 1. Get a name to assign to
+
+    auto token = lexer_.Peek();
+    FMT_ASSERT(token.type == lex::TokenType::IDENTIFIER,
+               "Trying to assign to a non-identifier");
+    auto lvalue = new LiteralExpression{std::move(token)};
+
+    // 2. Get an expression to assign to
+
+    Consume(lex::TokenType::EQ);
+
+    auto value = ParseExpression();
+    FMT_ASSERT(value, "Trying to assign a non-existent value");
+
+    Consume(lex::TokenType::SEMICOLUMN);
+
+    return new VarDeclStatement{lvalue, value};
   }
 
   ExprStatement* ParseExprStatement() {
