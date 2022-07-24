@@ -9,7 +9,23 @@
 
 class PrintingVisitor : public ReturnVisitor<std::string> {
  public:
-  virtual void VisitComparison(ComparisonExpression* node) {
+  virtual void VisitIf(IfStatement*) override {
+    std::abort();
+  }
+
+  virtual void VisitStatement(Statement*) override {
+    std::abort();
+  }
+
+  virtual void VisitExprStatement(ExprStatement*) override {
+    std::abort();
+  }
+
+  virtual void VisitExpression(Expression*) override {
+    std::abort();
+  }
+
+  virtual void VisitComparison(ComparisonExpression* node) override {
     return_value = fmt::format(
         "Comparison-of-(\n"
         "\t type:    {}  \n"
@@ -19,7 +35,7 @@ class PrintingVisitor : public ReturnVisitor<std::string> {
         Eval(node->left_), Eval(node->right_));
   };
 
-  virtual void VisitBinary(BinaryExpression* node) {
+  virtual void VisitBinary(BinaryExpression* node) override {
     return_value = fmt::format(
         "Binary-of-(\n"
         "\t type:    {}  \n"
@@ -29,7 +45,7 @@ class PrintingVisitor : public ReturnVisitor<std::string> {
         Eval(node->left_), Eval(node->right_));
   }
 
-  virtual void VisitUnary(UnaryExpression* node) {
+  virtual void VisitUnary(UnaryExpression* node) override {
     return_value = fmt::format(
         "Unary-of-(\n"
         "\t type:    {}  \n"
@@ -38,7 +54,7 @@ class PrintingVisitor : public ReturnVisitor<std::string> {
         Eval(node->operand_));
   }
 
-  virtual void VisitLiteral(LiteralExpression* node) {
+  virtual void VisitLiteral(LiteralExpression* node) override {
     auto lit_string = Format(literal_eval_.Eval(node));
     return_value = fmt::format("Literal {}", lit_string);
   }

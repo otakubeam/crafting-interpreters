@@ -36,11 +36,11 @@ inline SBObject BinaryOp(char op_type, SBObject lhs, SBObject rhs) {
   }
 }
 
-inline SBObject plus(SBObject one, SBObject two) {
+inline SBObject Plus(SBObject one, SBObject two) {
   return BinaryOp('+', one, two);
 }
 
-inline SBObject minus(SBObject one, SBObject two) {
+inline SBObject Minus(SBObject one, SBObject two) {
   return BinaryOp('-', one, two);
 }
 
@@ -56,11 +56,11 @@ inline SBObject UnaryOp(char op_type, SBObject operand) {
   }
 }
 
-inline SBObject bang(SBObject one) {
+inline SBObject Bang(SBObject one) {
   return UnaryOp('!', one);
 }
 
-inline SBObject negate(SBObject one) {
+inline SBObject Negate(SBObject one) {
   return UnaryOp('-', one);
 }
 

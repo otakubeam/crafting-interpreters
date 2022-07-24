@@ -6,7 +6,7 @@
 template <typename T>
 class ReturnVisitor : public Visitor {
  public:
-  T Eval(Expression* expr) {
+  T Eval(TreeNode* expr) {
     FMT_ASSERT(expr,
                "\nError: "
                "Evaluating null expression \n");

@@ -31,9 +31,10 @@ enum class TokenType {
   VAR,  // VAR name
 
   IF,
+  ELSE,
   FOR,
 
-  COLUMN,
+  SEMICOLUMN,
 
   // These only change the location info of the lexer
   TOKEN_EOL,
@@ -60,8 +61,9 @@ enum class TokenType {
   code(FUN )                \
   code(VAR)                 \
   code(IF)                  \
+  code(ELSE)                \
   code(FOR)                 \
-  code(COLUMN)              \
+  code(SEMICOLUMN)          \
   code(TOKEN_EOL)           \
   code(TOKEN_EOF)
 // clang-format on

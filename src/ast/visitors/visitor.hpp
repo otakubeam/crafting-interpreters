@@ -5,11 +5,18 @@
 //////////////////////////////////////////////////////////////////////
 
 class TreeNode;
+
 class Expression;
+//---------------
 class ComparisonExpression;
 class BinaryExpression;
 class UnaryExpression;
 class LiteralExpression;
+//---------------
+class Statement;
+class IfStatement;
+class ExprStatement;
+class VarDeclStatement;
 
 class Visitor {
   // So visitor must know about expressions and others
@@ -26,6 +33,18 @@ class Visitor {
   // then then can have different names.
 
  public:
+  // Statements
+
+  virtual void VisitIf(IfStatement* node) = 0;
+
+  virtual void VisitStatement(Statement* node) = 0;
+
+  virtual void VisitExprStatement(ExprStatement* node) = 0;
+
+  // Expressions
+
+  virtual void VisitExpression(Expression* node) = 0;
+
   virtual void VisitComparison(ComparisonExpression* node) = 0;
 
   virtual void VisitBinary(BinaryExpression* node) = 0;

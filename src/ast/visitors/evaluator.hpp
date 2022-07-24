@@ -1,13 +1,36 @@
 #pragma once
 
 #include <ast/visitors/template_visitor.hpp>
-#include <ast/syntax_tree.hpp>
 
+#include <ast/expressions.hpp>
+#include <ast/statements.hpp>
+
+#include <rt/primitive_type.hpp>
 #include <rt/base_object.hpp>
 
 class Evaluator : public ReturnVisitor<SBObject> {
  public:
-  virtual void VisitComparison(ComparisonExpression* node) {
+  virtual void VisitIf(IfStatement* node) override {
+    auto cond = GetPrim<bool>(Eval(node->condition_));
+    auto* branch = cond ? node->true_branch_ : node->false_branch_;
+    Eval(branch);
+  }
+
+  virtual void VisitStatement(Statement* /* node */) override {
+    FMT_ASSERT(false, "Visiting bare statement");
+  }
+
+  virtual void VisitExprStatement(ExprStatement* node) override {
+    Eval(node->expr_);
+  }
+
+  ////////////////////////////////////////////////////////////////////
+
+  virtual void VisitExpression(Expression* /* node */) override {
+    FMT_ASSERT(false, "Visiting bare expression");
+  }
+
+  virtual void VisitComparison(ComparisonExpression* node) override {
     auto lhs = Eval(node->left_);
     auto rhs = Eval(node->right_);
 
@@ -26,17 +49,17 @@ class Evaluator : public ReturnVisitor<SBObject> {
     }
   }
 
-  virtual void VisitBinary(BinaryExpression* node) {
+  virtual void VisitBinary(BinaryExpression* node) override {
     auto lhs = Eval(node->left_);
     auto rhs = Eval(node->right_);
 
     switch (node->operator_.type) {
       case lex::TokenType::PLUS:
-        return_value = plus(lhs, rhs);
+        return_value = Plus(lhs, rhs);
         break;
 
       case lex::TokenType::MINUS:
-        return_value = minus(lhs, rhs);
+        return_value = Minus(lhs, rhs);
         break;
 
       default:
@@ -44,16 +67,16 @@ class Evaluator : public ReturnVisitor<SBObject> {
     }
   }
 
-  virtual void VisitUnary(UnaryExpression* node) {
+  virtual void VisitUnary(UnaryExpression* node) override {
     auto val = Eval(node->operand_);
 
     switch (node->operator_.type) {
       case lex::TokenType::NOT:
-        return_value = bang(val);
+        return_value = Bang(val);
         break;
 
       case lex::TokenType::MINUS:
-        return_value = negate(val);
+        return_value = Negate(val);
         break;
 
       default:
@@ -61,7 +84,7 @@ class Evaluator : public ReturnVisitor<SBObject> {
     }
   }
 
-  virtual void VisitLiteral(LiteralExpression* lit) {
+  virtual void VisitLiteral(LiteralExpression* lit) override {
     auto val = lit->token_.sem_info;
     return_value = {FromSemInfo(val)};
   }
