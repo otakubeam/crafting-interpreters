@@ -25,7 +25,7 @@ class Evaluator : public ReturnVisitor<SBObject> {
   virtual void VisitVarDecl(VarDeclStatement* node) override {
     auto name = std::get<std::string>(node->lvalue_->token_.sem_info);
     auto val = Eval(node->value_);
-    state_.emplace(name, val);
+    state_.insert_or_assign(name, val);
   }
 
   virtual void VisitExprStatement(ExprStatement* node) override {
