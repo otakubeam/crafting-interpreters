@@ -31,7 +31,6 @@ TEST_CASE("Grouping", "[lex]") {
 
 TEST_CASE("Keywords", "[lex]") {
   char stream[] = "var fun for if else print true false";
-  fmt::print("Hello world");
   lex::Lexer l{stream};
 
   REQUIRE(l.Peek().type == lex::TokenType::VAR);
@@ -42,6 +41,16 @@ TEST_CASE("Keywords", "[lex]") {
   CHECK(l.Advance().type == lex::TokenType::PRINT);
   CHECK(l.Advance().type == lex::TokenType::TRUE);
   CHECK(l.Advance().type == lex::TokenType::FALSE);
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Consequent", "[lex]") {
+  char stream[] = "!true";
+  lex::Lexer l{stream};
+
+  CHECK(l.Peek().type == lex::TokenType::NOT);
+  CHECK(l.Advance().type == lex::TokenType::TRUE);
 }
 
 //////////////////////////////////////////////////////////////////////

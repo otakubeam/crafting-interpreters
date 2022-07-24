@@ -85,8 +85,19 @@ class Evaluator : public ReturnVisitor<SBObject> {
   }
 
   virtual void VisitLiteral(LiteralExpression* lit) override {
-    auto val = lit->token_.sem_info;
-    return_value = {FromSemInfo(val)};
+    switch (lit->token_.type) {
+      case lex::TokenType::TRUE:
+        return_value = {PrimitiveType{true}};
+        break;
+
+      case lex::TokenType::FALSE:
+        return_value = {PrimitiveType{false}};
+        break;
+
+      default:
+        auto val = lit->token_.sem_info;
+        return_value = {FromSemInfo(val)};
+    }
   }
 
  private:
@@ -105,7 +116,7 @@ class Evaluator : public ReturnVisitor<SBObject> {
 
         // bool
       case 2:
-        return PrimitiveType{std::get<bool>(sem_info)};
+        FMT_ASSERT(false, "\n Error: Unreachable \n");
 
         // int
       case 3:

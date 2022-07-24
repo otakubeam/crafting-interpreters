@@ -84,6 +84,11 @@ class Parser {
   //     these new statements.     ---------------                 //
   //                                                               //
   //                                                               //
+  //    It seems to be more useful to make 'if' an expression.     //
+  //                               ============ --------------     //
+  //    I wonder if there are any unintended consequences to that  //
+  //                              -----------------------          //
+  //                                                               //
   //                                                               //
   //                                                               //
   //                                                               //

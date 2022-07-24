@@ -47,7 +47,7 @@ Expression* Parser::ParseBinary() {
 Expression* Parser::ParseUnary() {
   auto token = lexer_.Peek();
 
-  if (Matches(lex::TokenType::MINUS)) {
+  if (Matches(lex::TokenType::MINUS) || Matches(lex::TokenType::NOT)) {
     if (auto expr = ParsePrimary()) {
       return new UnaryExpression{token, expr};
     } else {
@@ -86,11 +86,14 @@ Expression* Parser::ParsePrimary() {
 
   switch (token.type) {
     case lex::TokenType::NUMBER:
+    case lex::TokenType::FALSE:
+    case lex::TokenType::TRUE:
     case lex::TokenType::STRING:
       result = new LiteralExpression{std::move(token)};
       break;
 
     case lex::TokenType::IDENTIFIER:
+      result = new LiteralExpression{std::move(token)};
       std::abort();
 
     default:

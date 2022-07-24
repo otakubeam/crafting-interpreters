@@ -49,8 +49,18 @@ TEST_CASE("Grouping", "[parser]") {
 
 //////////////////////////////////////////////////////////////////////
 
+TEST_CASE("Booleans", "[parser]") {
+  char stream[] = "!true";
+  Parser p{lex::Lexer{stream}};
+
+  Evaluator e;
+  CHECK(e.Eval(p.ParseExpression()) == FromPrim(false));
+}
+
+//////////////////////////////////////////////////////////////////////
+
 TEST_CASE("Misleading minus", "[parser]") {
-  char stream[] = "-1 -2";
+  char stream[] = "- 1 - 2";
   Parser p{lex::Lexer{stream}};
 
   Evaluator e;
@@ -72,5 +82,23 @@ TEST_CASE("No braced expression", "[parser]") {
   Parser p{lex::Lexer{stream}};
   CHECK_THROWS(p.ParseExpression());
 }
+
+//////////////////////////////////////////////////////////////////////
+//                           Statements
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Expression statement", "[parser]") {
+  char stream[] = "1 + 2;";
+  Parser p{lex::Lexer{stream}};
+  CHECK_NOTHROW(p.ParseStatement());
+}
+
+//////////////////////////////////////////////////////////////////////
+
+// TEST_CASE("If statement", "[parser]") {
+//   char stream[] = "if 1 = 1 1; else 2;";
+//   Parser p{lex::Lexer{stream}};
+//   CHECK_NOTHROW(p.ParseStatement());
+// }
 
 //////////////////////////////////////////////////////////////////////
