@@ -5,6 +5,8 @@
 
 #include <lex/lexer.hpp>
 
+#include <time.h>
+
 #include <catch2/catch.hpp>
 
 class Parser {

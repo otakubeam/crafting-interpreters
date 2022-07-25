@@ -1,6 +1,6 @@
 #pragma once
 
-#include <lex/scan_info.hpp>
+#include <lex/scanner.hpp>
 
 #include <variant>
 #include <cstddef>

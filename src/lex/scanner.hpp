@@ -3,6 +3,8 @@
 #include <lex/token_type.hpp>
 
 #include <filesystem>
+#include <iostream>
+#include <istream>
 
 namespace lex {
 
@@ -22,26 +24,24 @@ struct SpanLines {
 
 //////////////////////////////////////////////////////////////////////
 
-struct ScanInfo {
+class Scanner {
  public:
-  // TODO: Accept file or cosequtive line from std as input stream
-  ScanInfo(char* new_buffer) : stream_buf{new_buffer} {
+  Scanner(std::istream& source) : source_{source} {
   }
 
   void MoveRight() {
     switch (CurrentSymbol()) {
       case '\n':
-        loc.columnno = 0;
-        loc.lineno += 1;
+        location_.columnno = 0;
+        location_.lineno += 1;
         break;
 
       case EOF:
-        // End stop
-        // Don't support several files
+        std::abort();
         break;
 
       default:
-        loc.columnno += 1;
+        location_.columnno += 1;
     }
   }
 
@@ -55,16 +55,17 @@ struct ScanInfo {
   }
 
   char CurrentSymbol() const {
-    return stream_buf[loc.columnno];
+    return source_.get();
   }
 
   Location GetLocation() const {
-    return loc;
+    return location_;
   }
 
  private:
-  char* stream_buf = 0;
-  Location loc;
+  std::istream& source_;
+
+  Location location_;
 };
 
 //////////////////////////////////////////////////////////////////////

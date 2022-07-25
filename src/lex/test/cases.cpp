@@ -3,11 +3,13 @@
 // Finally,
 #include <catch2/catch.hpp>
 
+#include <iostream>
+
 //////////////////////////////////////////////////////////////////////
 
 TEST_CASE("Just works", "[lex]") {
-  char stream[] = "1 + 2";
-  lex::Lexer l{stream};
+  std::stringstream source("1 + 2");
+  lex::Lexer l{source};
 
   REQUIRE(l.Peek().type == lex::TokenType::NUMBER);
   CHECK(l.Advance().type == lex::TokenType::PLUS);
@@ -17,8 +19,8 @@ TEST_CASE("Just works", "[lex]") {
 //////////////////////////////////////////////////////////////////////
 
 TEST_CASE("Grouping", "[lex]") {
-  char stream[] = "1 + (1)";
-  lex::Lexer l{stream};
+  std::stringstream source("1 + (1)");
+  lex::Lexer l{source};
 
   REQUIRE(l.Peek().type == lex::TokenType::NUMBER);
   CHECK(l.Advance().type == lex::TokenType::PLUS);
@@ -30,8 +32,8 @@ TEST_CASE("Grouping", "[lex]") {
 ///////////////////////////////////////////////////////////////////
 
 TEST_CASE("Keywords", "[lex]") {
-  char stream[] = "var fun for if else print true false";
-  lex::Lexer l{stream};
+  std::stringstream source("var fun for if else print true false");
+  lex::Lexer l{source};
 
   REQUIRE(l.Peek().type == lex::TokenType::VAR);
   CHECK(l.Advance().type == lex::TokenType::FUN);
@@ -46,8 +48,8 @@ TEST_CASE("Keywords", "[lex]") {
 //////////////////////////////////////////////////////////////////////
 
 TEST_CASE("Consequent", "[lex]") {
-  char stream[] = "!true";
-  lex::Lexer l{stream};
+  std::stringstream source("!true");
+  lex::Lexer l{source};
 
   CHECK(l.Peek().type == lex::TokenType::NOT);
   CHECK(l.Advance().type == lex::TokenType::TRUE);
@@ -55,19 +57,23 @@ TEST_CASE("Consequent", "[lex]") {
 
 //////////////////////////////////////////////////////////////////////
 
-// TEST_CASE("Comments", "[lex]") {
-//   char stream[] = "# Comment \n 1";
-//   lex::Lexer l{stream};
-//
-//   // parses to just `1`
-//   REQUIRE(l.Peek().type == lex::TokenType::NUMBER);
-// }
+TEST_CASE("Comments", "[lex]") {
+  std::stringstream source(
+      "# Comment if var a = 1; \n"
+      "# One more comment \n"
+      "1 # Token then comment \n"  // <--- Token
+      "# Comment with no newline");
+  lex::Lexer l{source};
+
+  // parses to just `1`
+  REQUIRE(l.Peek().type == lex::TokenType::NUMBER);
+}
 
 //////////////////////////////////////////////////////////////////////
 
 TEST_CASE("Statement", "[lex]") {
-  char stream[] = "var abc = 0;";
-  lex::Lexer l{stream};
+  std::stringstream source("var abc = 0;");
+  lex::Lexer l{source};
 
   CHECK(l.Peek().type == lex::TokenType::VAR);
   CHECK(l.Advance().type == lex::TokenType::IDENTIFIER);
@@ -79,8 +85,8 @@ TEST_CASE("Statement", "[lex]") {
 //////////////////////////////////////////////////////////////////////
 
 TEST_CASE("String literal", "[lex]") {
-  char stream[] = "\"Hello world\"";
-  lex::Lexer l{stream};
+  std::stringstream source("\"Hello world\"");
+  lex::Lexer l{source};
 
   CHECK(l.Peek().type == lex::TokenType::STRING);
 }

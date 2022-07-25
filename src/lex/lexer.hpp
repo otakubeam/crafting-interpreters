@@ -14,7 +14,7 @@ namespace lex {
 
 class Lexer {
  public:
-  Lexer(char* stream) : info_{stream} {
+  Lexer(std::istream& source) : info_{source} {
     Advance();  // so that it starts in a valid state for Peek()
   }
 
@@ -22,6 +22,8 @@ class Lexer {
 
   Token GetNextToken() {
     SkipWhitespace();
+
+    SkipComments();
 
     if (auto op = MatchOperators()) {
       return *op;
@@ -58,17 +60,12 @@ class Lexer {
     }
   }
 
-  // TODO: waiting until I can work with files
-
-  // void SkipComments() {
-  //   while (info_.CurrentSymbol() == '#') {
-  //     UNSCOPED_INFO(fmt::format(  //
-  //         "CurrentSymbol is {}", info_.CurrentSymbol()));
-  //     info_.MoveNextLine();
-  //     UNSCOPED_INFO("Moved next line");
-  //     SkipWhitespace();
-  //   }
-  // }
+  void SkipComments() {
+    while (info_.CurrentSymbol() == '#') {
+      info_.MoveNextLine();
+      SkipWhitespace();
+    }
+  }
 
   ////////////////////////////////////////////////////////////////////
 
@@ -165,8 +162,8 @@ class Lexer {
 
  private:
   Token peek_{};
-  ScanInfo info_;
+  Scanner info_;
   IdentTable table_;
 };
 
-}  //namespace lex
+}  // namespace lex

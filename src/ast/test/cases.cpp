@@ -69,7 +69,8 @@ TEST_CASE("Print tree", "[ast]") {
 
 TEST_CASE("Variable decalration", "[ast]") {
   char stream[] = "var x = 5;";
-  Parser p{lex::Lexer{stream}};
+  std::stringstream source{stream};
+  Parser p{lex::Lexer{source}};
 
   Evaluator e;
   CHECK_NOTHROW(e.Eval(p.ParseStatement()));
@@ -81,7 +82,8 @@ TEST_CASE("Keep state", "[ast]") {
   char stream[] =
       "var x = 5;"  //
       "x + x";
-  Parser p{lex::Lexer{stream}};
+  std::stringstream source{stream};
+  Parser p{lex::Lexer{source}};
 
   Evaluator e;
   e.Eval(p.ParseStatement());
@@ -95,7 +97,8 @@ TEST_CASE("Multistate", "[ast]") {
       "var x = 5;"  //
       "var y = 3;"  //
       "x - y";
-  Parser p{lex::Lexer{stream}};
+  std::stringstream source{stream};
+  Parser p{lex::Lexer{source}};
 
   Evaluator e;
   e.Eval(p.ParseStatement());
@@ -110,7 +113,8 @@ TEST_CASE("Initialize with variable", "[ast]") {
       "var x = 5;"  //
       "var y = x;"  //
       "x - y";
-  Parser p{lex::Lexer{stream}};
+  std::stringstream source{stream};
+  Parser p{lex::Lexer{source}};
 
   Evaluator e;
   e.Eval(p.ParseStatement());
@@ -125,7 +129,8 @@ TEST_CASE("Overwrite", "[ast]") {
       "var x = 5;"  //
       "var x = 4;"  //
       "x";
-  Parser p{lex::Lexer{stream}};
+  std::stringstream source{stream};
+  Parser p{lex::Lexer{source}};
 
   Evaluator e;
   e.Eval(p.ParseStatement());
@@ -139,7 +144,8 @@ TEST_CASE("Unknown variable", "[ast]") {
   char stream[] =
       "var x = 5;"  //
       "y + x";
-  Parser p{lex::Lexer{stream}};
+  std::stringstream source{stream};
+  Parser p{lex::Lexer{source}};
 
   Evaluator e;
   e.Eval(p.ParseStatement());
@@ -150,7 +156,8 @@ TEST_CASE("Unknown variable", "[ast]") {
 
 TEST_CASE("Eval string literal", "[ast]") {
   char stream[] = " \"abc\"";
-  Parser p{lex::Lexer{stream}};
+  std::stringstream source{stream};
+  Parser p{lex::Lexer{source}};
 
   Evaluator e;
   CHECK(e.Eval(p.ParseExpression()) == FromPrim('a'));
