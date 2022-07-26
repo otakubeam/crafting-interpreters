@@ -27,6 +27,7 @@ struct SpanLines {
 class Scanner {
  public:
   Scanner(std::istream& source) : source_{source} {
+    FetchNextSymbol();
   }
 
   void MoveRight() {
@@ -43,6 +44,8 @@ class Scanner {
       default:
         location_.columnno += 1;
     }
+
+    FetchNextSymbol();
   }
 
   void MoveNextLine() {
@@ -54,8 +57,8 @@ class Scanner {
     MoveRight();
   }
 
-  char CurrentSymbol() const {
-    return source_.get();
+  char CurrentSymbol() {
+    return symbol_;
   }
 
   Location GetLocation() const {
@@ -63,9 +66,16 @@ class Scanner {
   }
 
  private:
+  char FetchNextSymbol() {
+    return symbol_ = source_.get();
+  }
+
+ private:
   std::istream& source_;
 
   Location location_;
+
+  char symbol_;
 };
 
 //////////////////////////////////////////////////////////////////////
