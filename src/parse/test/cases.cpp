@@ -74,7 +74,7 @@ TEST_CASE("Variable declaration", "[parser]") {
 //////////////////////////////////////////////////////////////////////
 
 TEST_CASE("Misleading minus", "[parser]") {
-  char stream[] = "- 1 + 2";
+  char stream[] = "- 1 - 2";
   std::stringstream source{stream};
   Parser p{lex::Lexer{source}};
 
@@ -133,7 +133,6 @@ TEST_CASE("Parse string literal", "[parser]") {
 
 TEST_CASE("Parse string literal (II)", "[parser]") {
   char stream[] = "\"ab\"";
-  //                -----   -----
   std::stringstream source{stream};
   Parser p{lex::Lexer{source}};
   CHECK_NOTHROW(p.ParseExpression());

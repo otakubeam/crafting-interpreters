@@ -2,6 +2,8 @@
 
 #include <lex/token_type.hpp>
 
+#include <fmt/core.h>
+
 #include <filesystem>
 #include <iostream>
 #include <istream>
@@ -38,7 +40,7 @@ class Scanner {
         break;
 
       case EOF:
-        std::abort();
+        // FMT_ASSERT(false, "\nReached EOF\n");
         break;
 
       default:
@@ -66,8 +68,8 @@ class Scanner {
   }
 
  private:
-  char FetchNextSymbol() {
-    return symbol_ = source_.get();
+  void FetchNextSymbol() {
+    symbol_ = source_.get();
   }
 
  private:

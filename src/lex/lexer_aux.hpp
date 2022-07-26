@@ -3,6 +3,7 @@
 #include <lex/token_type.hpp>
 
 #include <optional>
+#include <istream>
 
 namespace lex {
 
@@ -28,6 +29,8 @@ inline std::optional<TokenType> MatchSingleWidthOperator(char ch) {
       return TokenType::RIGHT_BRACE;
     case ';':
       return TokenType::SEMICOLUMN;
+    case EOF:
+      return TokenType::TOKEN_EOF;
     default:
       return std::nullopt;
   }

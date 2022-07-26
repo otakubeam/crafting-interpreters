@@ -37,7 +37,7 @@ class Lexer {
       return *word;
     }
 
-    std::abort();
+    FMT_ASSERT(false, "\nCould not match any token\n");
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -121,13 +121,17 @@ class Lexer {
 
     // It matched! Now do match the whole string
 
-    std::string lit;
+    // Consume commencing "
     info_.MoveRight();
 
+    std::string lit;
     while (info_.CurrentSymbol() != '\"') {
       lit.push_back(info_.CurrentSymbol());
       info_.MoveRight();
     }
+
+    // Consume enclosing "
+    info_.MoveRight();
 
     return Token{TokenType::STRING, info_.GetLocation(), {lit[0]}};
   }
