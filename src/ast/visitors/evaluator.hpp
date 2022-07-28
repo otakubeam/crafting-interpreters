@@ -11,9 +11,16 @@
 
 class Evaluator : public ReturnVisitor<SBObject> {
  public:
+  Evaluator();
+  virtual ~Evaluator();
+
+  ////////////////////////////////////////////////////////////////////
+
   virtual void VisitStatement(Statement* /* node */) override {
     FMT_ASSERT(false, "Visiting bare statement");
   }
+
+  ////////////////////////////////////////////////////////////////////
 
   virtual void VisitIf(IfStatement* node) override {
     auto cond = GetPrim<bool>(Eval(node->condition_));
@@ -21,11 +28,15 @@ class Evaluator : public ReturnVisitor<SBObject> {
     Eval(branch);
   }
 
+  ////////////////////////////////////////////////////////////////////
+
   virtual void VisitVarDecl(VarDeclStatement* node) override {
     auto name = std::get<std::string>(node->lvalue_->token_.sem_info);
     auto val = Eval(node->value_);
     env_->Declare(name, val);
   }
+
+  ////////////////////////////////////////////////////////////////////
 
   virtual void VisitFunDecl(FunDeclStatement* node) override {
     auto name = std::get<std::string>(node->name_.sem_info);
@@ -33,9 +44,13 @@ class Evaluator : public ReturnVisitor<SBObject> {
     env_->Declare(name, val);
   }
 
+  ////////////////////////////////////////////////////////////////////
+
   virtual void VisitExprStatement(ExprStatement* node) override {
     Eval(node->expr_);
   }
+
+  ////////////////////////////////////////////////////////////////////
 
   virtual void VisitBlockStatement(BlockStatement* node) override {
     Environment::ScopeGuard guard{&env_};
@@ -46,88 +61,12 @@ class Evaluator : public ReturnVisitor<SBObject> {
 
   ////////////////////////////////////////////////////////////////////
 
-  virtual void VisitExpression(Expression* /* node */) override {
-    FMT_ASSERT(false, "Visiting bare expression");
-  }
+  virtual void VisitExpression(Expression* node) override;
 
-  virtual void VisitComparison(ComparisonExpression* node) override {
-    auto lhs = Eval(node->left_);
-    auto rhs = Eval(node->right_);
-
-    switch (node->operator_.type) {
-      case lex::TokenType::EQ:
-        return_value = {PrimitiveType{lhs == rhs}};
-        break;
-
-      case lex::TokenType::LT:
-        // return_value = {PrimitiveType{lhs < rhs}};
-        std::abort();
-        break;
-
-      default:
-        std::abort();
-    }
-  }
-
-  virtual void VisitBinary(BinaryExpression* node) override {
-    auto lhs = Eval(node->left_);
-    auto rhs = Eval(node->right_);
-
-    switch (node->operator_.type) {
-      case lex::TokenType::PLUS:
-        return_value = Plus(lhs, rhs);
-        break;
-
-      case lex::TokenType::MINUS:
-        return_value = Minus(lhs, rhs);
-        break;
-
-      default:
-        std::abort();
-    }
-  }
-
-  virtual void VisitUnary(UnaryExpression* node) override {
-    auto val = Eval(node->operand_);
-
-    switch (node->operator_.type) {
-      case lex::TokenType::NOT:
-        return_value = Bang(val);
-        break;
-
-      case lex::TokenType::MINUS:
-        return_value = Negate(val);
-        break;
-
-      default:
-        std::abort();
-    }
-  }
-
-  virtual void VisitLiteral(LiteralExpression* lit) override {
-    switch (lit->token_.type) {
-      case lex::TokenType::IDENTIFIER: {
-        auto name = std::get<std::string>(lit->token_.sem_info);
-
-        // TODO: think better about error handling
-        return_value = env_->Get(name).value();
-
-        break;
-      }
-
-      case lex::TokenType::TRUE:
-        return_value = {PrimitiveType{true}};
-        break;
-
-      case lex::TokenType::FALSE:
-        return_value = {PrimitiveType{false}};
-        break;
-
-      default:
-        auto val = lit->token_.sem_info;
-        return_value = {FromSemInfo(val)};
-    }
-  }
+  virtual void VisitComparison(ComparisonExpression* node) override;
+  virtual void VisitBinary(BinaryExpression* node) override;
+  virtual void VisitUnary(UnaryExpression* node) override;
+  virtual void VisitLiteral(LiteralExpression* lit) override;
 
  private:
   // TODO: Translation from SemInfo to AST nodes
@@ -157,8 +96,6 @@ class Evaluator : public ReturnVisitor<SBObject> {
   }
 
  private:
-  Environment global_environment = Environment::MakeGlobal();
-  Environment* env_{&global_environment};
+  Environment global_environment;
+  Environment* env_{nullptr};
 };
-
-//////////////////////////////////////////////////////////////////////
