@@ -99,7 +99,6 @@ TEST_CASE("Funtion declaration noargs", "[lex]") {
   //                        name   no args   expr-statement
   lex::Lexer l{source};
 
-
   CHECK(l.Peek().type == lex::TokenType::FUN);
   CHECK(l.Advance().type == lex::TokenType::IDENTIFIER);
   CHECK(l.Advance().type == lex::TokenType::LEFT_BRACE);
@@ -115,7 +114,6 @@ TEST_CASE("Funtion declaration args", "[lex]") {
   //                        -----     -------------  -------------
   //                        name          args       expr-statement
   lex::Lexer l{source};
-
 
   CHECK(l.Peek().type == lex::TokenType::FUN);
   CHECK(l.Advance().type == lex::TokenType::IDENTIFIER);
@@ -134,6 +132,16 @@ TEST_CASE("Funtion declaration args", "[lex]") {
   CHECK(l.Advance().type == lex::TokenType::RIGHT_BRACE);
   CHECK(l.Advance().type == lex::TokenType::NUMBER);
   CHECK(l.Advance().type == lex::TokenType::SEMICOLUMN);
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Curly", "[lex]") {
+  std::stringstream source("{ }");
+  lex::Lexer l{source};
+
+  CHECK(l.Peek().type == lex::TokenType::LEFT_CBRACE);
+  CHECK(l.Advance().type == lex::TokenType::RIGHT_CBRACE);
 }
 
 //////////////////////////////////////////////////////////////////////

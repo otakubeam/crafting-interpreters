@@ -38,6 +38,12 @@ class Evaluator : public ReturnVisitor<SBObject> {
     Eval(node->expr_);
   }
 
+  virtual void VisitBlockStatement(BlockStatement* node) override {
+    for (auto stmt : node->stmts_) {
+      Eval(stmt);
+    }
+  }
+
   ////////////////////////////////////////////////////////////////////
 
   virtual void VisitExpression(Expression* /* node */) override {

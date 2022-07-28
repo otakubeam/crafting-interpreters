@@ -87,8 +87,6 @@ class FunDeclStatement : public Statement {
 
 //////////////////////////////////////////////////////////////////////
 
-// fun f(a1, a2, a3) { }
-
 class BlockStatement : public Statement {
  public:
   BlockStatement(std::vector<Statement*> stmts) : stmts_{stmts} {

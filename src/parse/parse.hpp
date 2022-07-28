@@ -31,11 +31,15 @@ class Parser {
       return fun_decl;
     }
 
+    if (auto block_statement = ParseBlockStatement()) {
+      return block_statement;
+    }
+
     if (auto expr_stmt = ParseExprStatement()) {
       return expr_stmt;
     }
 
-    // TODO: WHILE,BLOCK statemnt
+    // TODO: WHILE statemnt
 
     std::abort();
   }
@@ -44,44 +48,50 @@ class Parser {
 
   FunDeclStatement* ParseFunDeclStatement() {
     if (!Matches(lex::TokenType::FUN)) {
-      UNSCOPED_INFO("Does not match");
       return nullptr;
     }
-
-    UNSCOPED_INFO("Matches");
 
     auto fun_name = lexer_.Peek();
     Consume(lex::TokenType::IDENTIFIER);
     Consume(lex::TokenType::LEFT_BRACE);
 
+    //// TODO: separate into fn GetFormals()
     std::vector<lex::Token> formals;
     auto formal_param = lexer_.Peek();
-
-    UNSCOPED_INFO("Before pasing formals");
 
     while (Matches(lex::TokenType::IDENTIFIER)) {
       formals.push_back(formal_param);
       if (!Matches(lex::TokenType::COMMA)) {
-         break;
+        break;
       }
       formal_param = lexer_.Peek();
     }
+    //// separate into fn GetFormals()
 
     Consume(lex::TokenType::RIGHT_BRACE);
 
-    // TODO: ParseBlockStatement instead.
-    // auto block = ParseStatement();
-    UNSCOPED_INFO("Before parsing statement");
-
-    auto block = ParseStatement();
+    auto block = ParseBlockStatement();
     return new FunDeclStatement{fun_name, std::move(formals), block};
   }
 
+  ///////////////////////////////////////////////////////////////////
+
+  BlockStatement* ParseBlockStatement() {
+    if (!Matches(lex::TokenType::LEFT_CBRACE)) {
+      return nullptr;
+    }
+
+    std::vector<Statement*> stmts;
+
+    while (!Matches(lex::TokenType::RIGHT_CBRACE)) {
+      auto stmt = ParseStatement();
+      stmts.push_back(stmt);
+    }
+
+    return new BlockStatement{std::move(stmts)};
+  }
 
   ///////////////////////////////////////////////////////////////////
-  BlockStatement* ParseBlockStatement() {
-
-  }
 
   IfStatement* ParseIfStatement() {
     if (!Matches(lex::TokenType::IF)) {

@@ -159,3 +159,33 @@ TEST_CASE("Parse function declaration (II)", "[parser]") {
   Parser p{lex::Lexer{source}};
   CHECK_NOTHROW(p.ParseStatement());
 }
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Block statement", "[parser]") {
+  std::stringstream source("{ 123; var a = 5; fun f() {}}");
+
+  Parser p{lex::Lexer{source}};
+  auto stmt = p.ParseStatement();
+
+  REQUIRE(typeid(*stmt) == typeid(BlockStatement));
+  BlockStatement* block = dynamic_cast<BlockStatement*>(stmt);
+
+  // Explicitly evaluate dereferences
+
+  auto& r1 = *block->stmts_[0];
+  auto& r2 = *block->stmts_[1];
+  auto& r3 = *block->stmts_[2];
+
+  CHECK(typeid(r1) == typeid(ExprStatement));
+  CHECK(typeid(r2) == typeid(VarDeclStatement));
+  CHECK(typeid(r3) == typeid(FunDeclStatement));
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Empty block statement", "[parser]") {
+  std::stringstream source("{}");
+  Parser p{lex::Lexer{source}};
+  CHECK_NOTHROW(p.ParseBlockStatement());
+}

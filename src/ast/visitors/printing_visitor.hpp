@@ -21,11 +21,15 @@ class PrintingVisitor : public ReturnVisitor<std::string> {
     std::abort();
   }
 
-  virtual void VisitFunDecl(FunDeclStatement* ) override {
-     std::abort();
+  virtual void VisitFunDecl(FunDeclStatement*) override {
+    std::abort();
   }
 
   virtual void VisitExprStatement(ExprStatement*) override {
+    std::abort();
+  }
+
+  virtual void VisitBlockStatement(BlockStatement*) override {
     std::abort();
   }
 

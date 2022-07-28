@@ -23,6 +23,10 @@ enum class TokenType {
   LEFT_BRACE,
   RIGHT_BRACE,
 
+  // CURLY
+  LEFT_CBRACE,
+  RIGHT_CBRACE,
+
   NOT,
 
   PRINT,
