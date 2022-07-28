@@ -1,5 +1,7 @@
 #pragma once
 
+#include <rt/scope/environment.hpp>
+
 #include <ast/visitors/visitor.hpp>
 #include <ast/syntax_tree.hpp>
 
@@ -16,4 +18,7 @@ class ReturnVisitor : public Visitor {
 
  protected:
   T return_value;
+
+  Environment global_environment;
+  Environment* env_{nullptr};
 };

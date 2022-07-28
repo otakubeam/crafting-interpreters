@@ -12,6 +12,8 @@ struct FunctionType : public IFunction {
 
   virtual SBObject Compute(ReturnVisitor<SBObject>* e,
                            std::vector<SBObject> args) override {
+    e->Eval(fn->block_);
+
     return {};
   };
 
