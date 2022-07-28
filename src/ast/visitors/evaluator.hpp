@@ -6,11 +6,14 @@
 #include <ast/statements.hpp>
 
 #include <rt/scope/environment.hpp>
+#include <rt/native_function.hpp>
 #include <rt/primitive_type.hpp>
 #include <rt/base_object.hpp>
 
 class Evaluator : public ReturnVisitor<SBObject> {
  public:
+  friend struct IFunction;
+
   Evaluator();
   virtual ~Evaluator();
 
@@ -40,7 +43,7 @@ class Evaluator : public ReturnVisitor<SBObject> {
 
   virtual void VisitFunDecl(FunDeclStatement* node) override {
     auto name = std::get<std::string>(node->name_.sem_info);
-    SBObject val = {FunctionType{node}};
+    SBObject val = {new FunctionType{node}};
     env_->Declare(name, val);
   }
 

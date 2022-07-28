@@ -6,22 +6,11 @@
 
 //////////////////////////////////////////////////////////////////////
 
-// Fwd
-class FunDeclStatement;
-
-struct FunctionType {
-  FunDeclStatement* fn;
-};
-
-inline bool operator==(FunctionType lhs, FunctionType rhs) {
-  return lhs.fn == rhs.fn;
-}
-
-//////////////////////////////////////////////////////////////////////
+struct IFunction;
 
 using SBObject = std::variant<  //
     PrimitiveType,              //
-    FunctionType,               //
+    IFunction*,                 //
     UserDefinedType*            //
     >;
 
