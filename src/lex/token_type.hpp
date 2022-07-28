@@ -26,8 +26,11 @@ enum class TokenType {
   NOT,
 
   PRINT,
-  FUN,  // FUN foo
-  VAR,  // VAR name
+
+  FUN,  
+  COMMA,
+
+  VAR, 
 
   IF,
   ELSE,
@@ -57,7 +60,8 @@ enum class TokenType {
   code(RIGHT_BRACE)         \
   code(NOT)                 \
   code(PRINT)               \
-  code(FUN )                \
+  code(FUN)                 \
+  code(COMMA)               \
   code(VAR)                 \
   code(IF)                  \
   code(ELSE)                \

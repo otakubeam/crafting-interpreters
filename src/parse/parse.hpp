@@ -5,8 +5,6 @@
 
 #include <lex/lexer.hpp>
 
-#include <time.h>
-
 #include <catch2/catch.hpp>
 
 class Parser {
@@ -18,6 +16,8 @@ class Parser {
     return ParseComparison();
   }
 
+  ///////////////////////////////////////////////////////////////////
+
   Statement* ParseStatement() {
     if (auto if_stmt = ParseIfStatement()) {
       return if_stmt;
@@ -27,14 +27,58 @@ class Parser {
       return var_decl;
     }
 
+    if (auto fun_decl = ParseFunDeclStatement()) {
+      return fun_decl;
+    }
+
     if (auto expr_stmt = ParseExprStatement()) {
       return expr_stmt;
     }
 
-    // TODO: WHILE,VAR,BLOCK statemnt
+    // TODO: WHILE,BLOCK statemnt
 
     std::abort();
   }
+
+  ///////////////////////////////////////////////////////////////////
+
+  FunDeclStatement* ParseFunDeclStatement() {
+    if (!Matches(lex::TokenType::FUN)) {
+      UNSCOPED_INFO("Does not match");
+      return nullptr;
+    }
+
+    UNSCOPED_INFO("Matches");
+
+    auto fun_name = lexer_.Peek();
+    Consume(lex::TokenType::IDENTIFIER);
+    Consume(lex::TokenType::LEFT_BRACE);
+
+    std::vector<lex::Token> formals;
+    auto formal_param = lexer_.Peek();
+
+    UNSCOPED_INFO("Before pasing formals");
+
+    while (Matches(lex::TokenType::IDENTIFIER)) {
+      formals.push_back(formal_param);
+      if (!Matches(lex::TokenType::COMMA)) {
+         break;
+      }
+      formal_param = lexer_.Peek();
+    }
+
+    Consume(lex::TokenType::RIGHT_BRACE);
+
+    // TODO: ParseBlockStatement instead.
+    // auto block = ParseStatement();
+    UNSCOPED_INFO("Before parsing statement");
+
+    auto block = ParseStatement();
+    return new FunDeclStatement{fun_name, std::move(formals), block};
+  }
+
+
+  ///////////////////////////////////////////////////////////////////
 
   IfStatement* ParseIfStatement() {
     if (!Matches(lex::TokenType::IF)) {
@@ -55,11 +99,13 @@ class Parser {
     if (Matches(lex::TokenType::ELSE)) {
       false_branch = ParseStatement();
       FMT_ASSERT(false_branch,  //
-                 "Else close wihtout associated statemtn");
+                 "Else clause without associated statement");
     }
 
     return new IfStatement(condition, true_branch, false_branch);
   }
+
+  ///////////////////////////////////////////////////////////////////
 
   VarDeclStatement* ParseVarDeclStatement() {
     if (!Matches(lex::TokenType::VAR)) {
@@ -84,6 +130,8 @@ class Parser {
 
     return new VarDeclStatement{lvalue, value};
   }
+
+  ///////////////////////////////////////////////////////////////////
 
   ExprStatement* ParseExprStatement() {
     auto expr = ParseExpression();
@@ -130,6 +178,7 @@ class Parser {
   Expression* ParseComparison();
   Expression* ParseBinary();
   Expression* ParseUnary();
+  Expression* ParseFunApplication();
   Expression* ParsePrimary();
 
   ////////////////////////////////////////////////////////////////////

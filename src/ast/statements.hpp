@@ -5,6 +5,8 @@
 
 #include <lex/token.hpp>
 
+#include <vector>
+
 //////////////////////////////////////////////////////////////////////
 
 class Statement : public TreeNode {
@@ -61,6 +63,25 @@ class VarDeclStatement : public Statement {
   // TODO: TypeExpression* type_;
   LiteralExpression* lvalue_;
   Expression* value_;
+};
+
+//////////////////////////////////////////////////////////////////////
+
+// fun f(a1, a2, a3) { }
+
+class FunDeclStatement : public Statement {
+ public:
+  FunDeclStatement(lex::Token name, std::vector<lex::Token> formals, Statement* block)
+      : name_{name}, formals_{std::move(formals)}, block_{block} {
+  }
+
+  virtual void Accept(Visitor* visitor) override {
+    visitor->VisitFunDecl(this);
+  }
+
+  lex::Token name_;
+  std::vector<lex::Token> formals_;
+  Statement* block_;
 };
 
 //////////////////////////////////////////////////////////////////////

@@ -139,3 +139,24 @@ TEST_CASE("Parse string literal (II)", "[parser]") {
 }
 
 //////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Parse function decl", "[parser]") {
+  std::stringstream source("fun f     ()       123;");
+  //                        -----  --------  -------------
+  //                        name   no args   expr-statement
+
+  Parser p{lex::Lexer{source}};
+  CHECK_NOTHROW(p.ParseStatement());
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Parse function declaration (II)", "[parser]") {
+  std::stringstream source("fun f     (a1, a2, a3)       123;");
+  //                        -----     -------------  -------------
+  //                        name          args       expr-statement
+  lex::Lexer{source};
+
+  Parser p{lex::Lexer{source}};
+  CHECK_NOTHROW(p.ParseStatement());
+}

@@ -17,6 +17,7 @@ class Statement;
 class IfStatement;
 class ExprStatement;
 class VarDeclStatement;
+class FunDeclStatement;
 
 class Visitor {
   // So visitor must know about expressions and others
@@ -40,6 +41,8 @@ class Visitor {
   virtual void VisitStatement(Statement* node) = 0;
 
   virtual void VisitVarDecl(VarDeclStatement* node) = 0;
+
+  virtual void VisitFunDecl(FunDeclStatement* node) = 0;
 
   virtual void VisitExprStatement(ExprStatement* node) = 0;
 

@@ -66,6 +66,10 @@ Expression* Parser::ParseUnary() {
 
 ////////////////////////////////////////////////////////////////////
 
+Expression* Parser::ParseFunApplication() {
+   return nullptr;
+}
+
 Expression* Parser::ParsePrimary() {
   Expression* result = nullptr;
 

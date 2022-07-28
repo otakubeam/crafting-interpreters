@@ -164,3 +164,13 @@ TEST_CASE("Eval string literal", "[ast]") {
 }
 
 //////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Eval decl", "[ast]") {
+  std::stringstream source("fun f     ()       123;");
+  //                        -----  --------  -------------
+  //                        name   no args   expr-statement
+  Parser p{lex::Lexer{source}};
+
+  Evaluator e;
+  CHECK_NOTHROW(e.Eval(p.ParseStatement()));
+}

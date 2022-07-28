@@ -28,6 +28,12 @@ class Evaluator : public ReturnVisitor<SBObject> {
     state_.insert_or_assign(name, val);
   }
 
+  virtual void VisitFunDecl(FunDeclStatement* node) override {
+    auto name = std::get<std::string>(node->name_.sem_info);
+    SBObject val = {FunctionType{node}};
+    state_.insert_or_assign(name, val);
+  }
+
   virtual void VisitExprStatement(ExprStatement* node) override {
     Eval(node->expr_);
   }

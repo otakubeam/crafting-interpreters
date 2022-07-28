@@ -92,3 +92,48 @@ TEST_CASE("String literal", "[lex]") {
 }
 
 //////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Funtion declaration noargs", "[lex]") {
+  std::stringstream source("fun f     ()       123;");
+  //                        -----  --------  -------------
+  //                        name   no args   expr-statement
+  lex::Lexer l{source};
+
+
+  CHECK(l.Peek().type == lex::TokenType::FUN);
+  CHECK(l.Advance().type == lex::TokenType::IDENTIFIER);
+  CHECK(l.Advance().type == lex::TokenType::LEFT_BRACE);
+  CHECK(l.Advance().type == lex::TokenType::RIGHT_BRACE);
+  CHECK(l.Advance().type == lex::TokenType::NUMBER);
+  CHECK(l.Advance().type == lex::TokenType::SEMICOLUMN);
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Funtion declaration args", "[lex]") {
+  std::stringstream source("fun f     (a1, a2, a3)       123;");
+  //                        -----     -------------  -------------
+  //                        name          args       expr-statement
+  lex::Lexer l{source};
+
+
+  CHECK(l.Peek().type == lex::TokenType::FUN);
+  CHECK(l.Advance().type == lex::TokenType::IDENTIFIER);
+  CHECK(l.Advance().type == lex::TokenType::LEFT_BRACE);
+
+  /// Args
+  CHECK(l.Advance().type == lex::TokenType::IDENTIFIER);
+  CHECK(l.Advance().type == lex::TokenType::COMMA);
+
+  CHECK(l.Advance().type == lex::TokenType::IDENTIFIER);
+  CHECK(l.Advance().type == lex::TokenType::COMMA);
+
+  CHECK(l.Advance().type == lex::TokenType::IDENTIFIER);
+  ///
+
+  CHECK(l.Advance().type == lex::TokenType::RIGHT_BRACE);
+  CHECK(l.Advance().type == lex::TokenType::NUMBER);
+  CHECK(l.Advance().type == lex::TokenType::SEMICOLUMN);
+}
+
+//////////////////////////////////////////////////////////////////////

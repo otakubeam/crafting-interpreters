@@ -11,7 +11,7 @@ using PrimitiveType = std::variant<  //
     std::nullptr_t,                  //
     int,                             //
     bool,                            //
-    char                             //
+    char                             // 
     >;
 
 //////////////////////////////////////////////////////////////////////
