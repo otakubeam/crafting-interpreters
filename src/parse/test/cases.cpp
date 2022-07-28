@@ -155,7 +155,6 @@ TEST_CASE("Parse function declaration (II)", "[parser]") {
   std::stringstream source("fun f     (a1, a2, a3)       123;");
   //                        -----     -------------  -------------
   //                        name          args       expr-statement
-  lex::Lexer{source};
 
   Parser p{lex::Lexer{source}};
   CHECK_NOTHROW(p.ParseStatement());

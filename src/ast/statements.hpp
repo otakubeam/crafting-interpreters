@@ -71,7 +71,8 @@ class VarDeclStatement : public Statement {
 
 class FunDeclStatement : public Statement {
  public:
-  FunDeclStatement(lex::Token name, std::vector<lex::Token> formals, Statement* block)
+  FunDeclStatement(lex::Token name, std::vector<lex::Token> formals,
+                   Statement* block)
       : name_{name}, formals_{std::move(formals)}, block_{block} {
   }
 
@@ -82,6 +83,22 @@ class FunDeclStatement : public Statement {
   lex::Token name_;
   std::vector<lex::Token> formals_;
   Statement* block_;
+};
+
+//////////////////////////////////////////////////////////////////////
+
+// fun f(a1, a2, a3) { }
+
+class BlockStatement : public Statement {
+ public:
+  BlockStatement(std::vector<Statement*> stmts) : stmts_{stmts} {
+  }
+
+  virtual void Accept(Visitor* visitor) override {
+    visitor->VisitBlockStatement(this);
+  }
+
+  std::vector<Statement*> stmts_;
 };
 
 //////////////////////////////////////////////////////////////////////

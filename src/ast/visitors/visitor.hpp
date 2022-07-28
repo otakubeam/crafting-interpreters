@@ -16,6 +16,7 @@ class LiteralExpression;
 class Statement;
 class IfStatement;
 class ExprStatement;
+class BlockStatement;
 class VarDeclStatement;
 class FunDeclStatement;
 
@@ -45,6 +46,8 @@ class Visitor {
   virtual void VisitFunDecl(FunDeclStatement* node) = 0;
 
   virtual void VisitExprStatement(ExprStatement* node) = 0;
+
+  virtual void VisitBlockStatement(BlockStatement* node) = 0;
 
   // Expressions
 

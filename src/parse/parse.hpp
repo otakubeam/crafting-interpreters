@@ -79,6 +79,9 @@ class Parser {
 
 
   ///////////////////////////////////////////////////////////////////
+  BlockStatement* ParseBlockStatement() {
+
+  }
 
   IfStatement* ParseIfStatement() {
     if (!Matches(lex::TokenType::IF)) {
