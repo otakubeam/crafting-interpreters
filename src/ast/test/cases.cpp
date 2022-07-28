@@ -175,6 +175,8 @@ TEST_CASE("Eval fn decl", "[ast]") {
   CHECK_NOTHROW(e.Eval(p.ParseStatement()));
 }
 
+//////////////////////////////////////////////////////////////////////
+
 TEST_CASE("Eval fn decl args", "[ast]") {
   std::stringstream source("fun f  (a1, a2, a3)       123;");
   //                        -----  ------------  -------------
@@ -184,3 +186,17 @@ TEST_CASE("Eval fn decl args", "[ast]") {
   Evaluator e;
   CHECK_NOTHROW(e.Eval(p.ParseStatement()));
 }
+
+//////////////////////////////////////////////////////////////////////
+
+// TODO: this should fail (scopes)
+TEST_CASE("Evaluating blocks", "[ast]") {
+  std::stringstream source(" { var x = 5; var x = 6; } x");
+  Parser p{lex::Lexer{source}};
+
+  Evaluator e;
+  e.Eval(p.ParseStatement());
+  CHECK(e.Eval(p.ParseExpression()) == FromPrim(6));
+}
+
+//////////////////////////////////////////////////////////////////////

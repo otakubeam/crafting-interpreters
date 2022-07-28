@@ -5,33 +5,32 @@
 #include <ast/expressions.hpp>
 #include <ast/statements.hpp>
 
+#include <rt/scope/environment.hpp>
 #include <rt/primitive_type.hpp>
 #include <rt/base_object.hpp>
 
-#include <unordered_map>
-
 class Evaluator : public ReturnVisitor<SBObject> {
  public:
+  virtual void VisitStatement(Statement* /* node */) override {
+    FMT_ASSERT(false, "Visiting bare statement");
+  }
+
   virtual void VisitIf(IfStatement* node) override {
     auto cond = GetPrim<bool>(Eval(node->condition_));
     auto* branch = cond ? node->true_branch_ : node->false_branch_;
     Eval(branch);
   }
 
-  virtual void VisitStatement(Statement* /* node */) override {
-    FMT_ASSERT(false, "Visiting bare statement");
-  }
-
   virtual void VisitVarDecl(VarDeclStatement* node) override {
     auto name = std::get<std::string>(node->lvalue_->token_.sem_info);
     auto val = Eval(node->value_);
-    state_.insert_or_assign(name, val);
+    env_.InsertOrAssign(name, val);
   }
 
   virtual void VisitFunDecl(FunDeclStatement* node) override {
     auto name = std::get<std::string>(node->name_.sem_info);
     SBObject val = {FunctionType{node}};
-    state_.insert_or_assign(name, val);
+    env_.InsertOrAssign(name, val);
   }
 
   virtual void VisitExprStatement(ExprStatement* node) override {
@@ -154,9 +153,7 @@ class Evaluator : public ReturnVisitor<SBObject> {
   }
 
  private:
-  using Name = std::string;
-
-  std::unordered_map<Name, SBObject> state_;
+  Environment* env_;
 };
 
 //////////////////////////////////////////////////////////////////////

@@ -189,3 +189,5 @@ TEST_CASE("Empty block statement", "[parser]") {
   Parser p{lex::Lexer{source}};
   CHECK_NOTHROW(p.ParseBlockStatement());
 }
+
+//////////////////////////////////////////////////////////////////////
