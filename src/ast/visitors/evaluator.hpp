@@ -24,13 +24,13 @@ class Evaluator : public ReturnVisitor<SBObject> {
   virtual void VisitVarDecl(VarDeclStatement* node) override {
     auto name = std::get<std::string>(node->lvalue_->token_.sem_info);
     auto val = Eval(node->value_);
-    env_.InsertOrAssign(name, val);
+    env_->Declare(name, val);
   }
 
   virtual void VisitFunDecl(FunDeclStatement* node) override {
     auto name = std::get<std::string>(node->name_.sem_info);
     SBObject val = {FunctionType{node}};
-    env_.InsertOrAssign(name, val);
+    env_->Declare(name, val);
   }
 
   virtual void VisitExprStatement(ExprStatement* node) override {
@@ -107,7 +107,8 @@ class Evaluator : public ReturnVisitor<SBObject> {
     switch (lit->token_.type) {
       case lex::TokenType::IDENTIFIER: {
         auto name = std::get<std::string>(lit->token_.sem_info);
-        return_value = state_.at(name);
+        // TODO: think better about error handling
+        return_value = env_->Get(name).value();
         break;
       }
 
