@@ -189,14 +189,13 @@ TEST_CASE("Eval fn decl args", "[ast]") {
 
 //////////////////////////////////////////////////////////////////////
 
-// TODO: this should fail (scopes)
-TEST_CASE("Evaluating blocks", "[ast]") {
-  std::stringstream source(" { var x = 5; var x = 6; } x");
+TEST_CASE("Bad scope access", "[ast]") {
+  std::stringstream source(" { var x = 5; } x");
   Parser p{lex::Lexer{source}};
 
   Evaluator e;
   e.Eval(p.ParseStatement());
-  CHECK(e.Eval(p.ParseExpression()) == FromPrim(6));
+  CHECK_THROWS(e.Eval(p.ParseExpression()) == FromPrim(6));
 }
 
 //////////////////////////////////////////////////////////////////////

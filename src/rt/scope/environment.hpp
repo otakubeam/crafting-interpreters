@@ -10,6 +10,12 @@ class Environment {
  public:
   using Name = std::string;
 
+  static Environment MakeGlobal() {
+    return Environment{nullptr};
+  }
+
+  ////////////////////////////////////////////////////////////////////
+
   struct ScopeGuard {
     ScopeGuard(Environment** current_scope) {
       auto new_env = new Environment{*current_scope};
@@ -27,6 +33,8 @@ class Environment {
 
     Environment** saved_current_scope;
   };
+
+  ////////////////////////////////////////////////////////////////////
 
   std::optional<SBObject> Get(Name name) {
     if (auto mb_iter = FindInternal(name)) {
@@ -51,9 +59,7 @@ class Environment {
     state_.insert_or_assign(name, val);
   }
 
-  static Environment MakeGlobal() {
-    return Environment{nullptr};
-  }
+  ////////////////////////////////////////////////////////////////////
 
  private:
   Environment(Environment* parent) : parent_scope_{parent} {
@@ -73,5 +79,6 @@ class Environment {
 
  private:
   Environment* parent_scope_;
+
   std::unordered_map<Name, SBObject> state_{};
 };

@@ -38,6 +38,7 @@ class Evaluator : public ReturnVisitor<SBObject> {
   }
 
   virtual void VisitBlockStatement(BlockStatement* node) override {
+    Environment::ScopeGuard guard{&env_};
     for (auto stmt : node->stmts_) {
       Eval(stmt);
     }
@@ -107,8 +108,10 @@ class Evaluator : public ReturnVisitor<SBObject> {
     switch (lit->token_.type) {
       case lex::TokenType::IDENTIFIER: {
         auto name = std::get<std::string>(lit->token_.sem_info);
+
         // TODO: think better about error handling
         return_value = env_->Get(name).value();
+
         break;
       }
 
@@ -154,7 +157,8 @@ class Evaluator : public ReturnVisitor<SBObject> {
   }
 
  private:
-  Environment* env_;
+  Environment global_environment = Environment::MakeGlobal();
+  Environment* env_{&global_environment};
 };
 
 //////////////////////////////////////////////////////////////////////

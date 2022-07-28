@@ -31,10 +31,10 @@ enum class TokenType {
 
   PRINT,
 
-  FUN,  
+  FUN,
   COMMA,
 
-  VAR, 
+  VAR,
 
   IF,
   ELSE,
@@ -62,6 +62,8 @@ enum class TokenType {
   code(LT)                  \
   code(LEFT_BRACE)          \
   code(RIGHT_BRACE)         \
+  code(LEFT_CBRACE)         \
+  code(RIGHT_CBRACE)        \
   code(NOT)                 \
   code(PRINT)               \
   code(FUN)                 \
