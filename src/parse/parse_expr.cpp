@@ -49,14 +49,14 @@ Expression* Parser::ParseUnary() {
   auto token = lexer_.Peek();
 
   if (Matches(lex::TokenType::MINUS) || Matches(lex::TokenType::NOT)) {
-    if (auto expr = ParsePrimary()) {
+    if (auto expr = ParseFunApplication()) {
       return new UnaryExpression{token, expr};
     } else {
       throw "Parse error: could not parse primary starting with minus";
     }
   }
 
-  auto expr = ParsePrimary();
+  auto expr = ParseFunApplication();
   FMT_ASSERT(expr,
              "\n Parse error: "
              "Could not match Unary Expression \n");
@@ -67,8 +67,37 @@ Expression* Parser::ParseUnary() {
 ////////////////////////////////////////////////////////////////////
 
 Expression* Parser::ParseFunApplication() {
-   return nullptr;
+  auto fun_name = lexer_.Peek();
+
+  if (!Matches(lex::TokenType::IDENTIFIER)) {
+    return ParsePrimary();
+  }
+
+  // At this point we have already consumed the token
+  // Now it's our responsibility
+  if (!Matches(lex::TokenType::LEFT_BRACE)) {
+    return new LiteralExpression{std::move(fun_name)};
+  }
+
+  std::vector<Expression*> args;
+
+  // Parse csv
+
+  if (!Matches(lex::TokenType::RIGHT_BRACE)) {
+    while (auto expr = ParseExpression()) {
+      args.push_back(expr);
+      if (!Matches(lex::TokenType::COMMA)) {
+        break;
+      }
+    }
+
+    Consume(lex::TokenType::RIGHT_BRACE);
+  }
+
+  return new FnCallExpression{fun_name, std::move(args)};
 }
+
+////////////////////////////////////////////////////////////////////
 
 Expression* Parser::ParsePrimary() {
   Expression* result = nullptr;

@@ -187,7 +187,75 @@ TEST_CASE("Block statement", "[parser]") {
 TEST_CASE("Empty block statement", "[parser]") {
   std::stringstream source("{}");
   Parser p{lex::Lexer{source}};
-  CHECK_NOTHROW(p.ParseBlockStatement());
+  auto block_statement = p.ParseBlockStatement();
+  REQUIRE(typeid(*block_statement) == typeid(BlockStatement));
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Function application (I)", "[parser]") {
+  std::stringstream source("f(1, 2)");
+  Parser p{lex::Lexer{source}};
+
+  auto fn_application = p.ParseExpression();
+  REQUIRE(typeid(*fn_application) == typeid(FnCallExpression));
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Function application (II)", "[parser]") {
+  std::stringstream source("f(g(), h(2))");
+  Parser p{lex::Lexer{source}};
+
+  auto fn_application = p.ParseExpression();
+  REQUIRE(typeid(*fn_application) == typeid(FnCallExpression));
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Function application (III)", "[parser]") {
+  std::stringstream source("f((1 < 2))");
+  //                          -------
+  //                            bool
+
+  // std::stringstream source("f((1 < 2), \"g\", f)");
+  // std::stringstream source("f((1 < 2), \"g\", f)");
+  Parser p{lex::Lexer{source}};
+
+  auto fn_application = p.ParseExpression();
+  REQUIRE(typeid(*fn_application) == typeid(FnCallExpression));
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Function application (IV)", "[parser]") {
+  std::stringstream source("clock()");
+  Parser p{lex::Lexer{source}};
+
+  auto fn_application = p.ParseExpression();
+  REQUIRE(typeid(*fn_application) == typeid(FnCallExpression));
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Function application (V)", "[parser]") {
+  std::stringstream source("f( \"string literal\" )");
+  Parser p{lex::Lexer{source}};
+
+  auto fn_application = p.ParseExpression();
+  REQUIRE(typeid(*fn_application) == typeid(FnCallExpression));
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Function application (VI)", "[parser]") {
+  std::stringstream source("f( f )");
+  //                         -----
+  //                      higher order
+  Parser p{lex::Lexer{source}};
+
+  auto fn_application = p.ParseExpression();
+  REQUIRE(typeid(*fn_application) == typeid(FnCallExpression));
 }
 
 //////////////////////////////////////////////////////////////////////
