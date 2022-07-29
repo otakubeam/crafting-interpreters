@@ -259,3 +259,23 @@ TEST_CASE("Function application (VI)", "[parser]") {
 }
 
 //////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Return statement", "[parser]") {
+  std::stringstream source("return foo(123);");
+  Parser p{lex::Lexer{source}};
+
+  auto stmt = p.ParseStatement();
+  REQUIRE(typeid(*stmt) == typeid(ReturnStatement));
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Yield as break", "[parser]") {
+  std::stringstream source("yield;");
+  Parser p{lex::Lexer{source}};
+
+  auto stmt = p.ParseStatement();
+  REQUIRE(typeid(*stmt) == typeid(YieldStatement));
+}
+
+//////////////////////////////////////////////////////////////////////

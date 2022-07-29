@@ -226,3 +226,28 @@ TEST_CASE("Intrinsic print", "[ast]") {
 }
 
 //////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Return value", "[ast]") {
+  std::stringstream source(      //
+      "fun f() { return 123; }"  //
+      "f()"                      //
+  );
+  Parser p{lex::Lexer{source}};
+
+  Evaluator e;
+  e.Eval(p.ParseStatement());
+  CHECK(e.Eval(p.ParseExpression()) == FromPrim(123));
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Yield as break", "[ast]") {
+  std::stringstream source(  //
+      "{ yield 5;  print(5); }");
+  //              -----------
+  //              not executed
+  Parser p{lex::Lexer{source}};
+
+  Evaluator e;
+  CHECK_THROWS_AS(e.Eval(p.ParseStatement()), Evaluator::YieldedValue);
+}

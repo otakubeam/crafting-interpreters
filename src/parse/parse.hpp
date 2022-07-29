@@ -136,6 +136,7 @@ class Parser {
     Expression* ret_expr = nullptr;
     if (!Matches(lex::TokenType::SEMICOLUMN)) {
       ret_expr = ParseExpression();
+      Consume(lex::TokenType::SEMICOLUMN);
     }
 
     return new ReturnStatement{ret_expr};
@@ -153,6 +154,7 @@ class Parser {
     Expression* ret_expr = nullptr;
     if (!Matches(lex::TokenType::SEMICOLUMN)) {
       ret_expr = ParseExpression();
+      Consume(lex::TokenType::SEMICOLUMN);
     }
 
     return new YieldStatement{ret_expr};
