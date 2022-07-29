@@ -23,7 +23,7 @@ void Evaluator::VisitComparison(ComparisonExpression* node) {
   auto rhs = Eval(node->right_);
 
   switch (node->operator_.type) {
-    case lex::TokenType::EQ:
+    case lex::TokenType::EQUALS:
       return_value = {PrimitiveType{lhs == rhs}};
       break;
 

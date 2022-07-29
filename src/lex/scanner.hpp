@@ -63,6 +63,10 @@ class Scanner {
     return symbol_;
   }
 
+  char PeekNextSymbol() {
+    return source_.peek();
+  }
+
   Location GetLocation() const {
     return location_;
   }

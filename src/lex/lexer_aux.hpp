@@ -11,35 +11,4 @@ inline bool IsWhitespace(char ch) {
   return ch == '\n' || ch == ' ' || ch == '\t';
 }
 
-inline std::optional<TokenType> MatchSingleWidthOperator(char ch) {
-  switch (ch) {
-    case '+':
-      return TokenType::PLUS;
-    case '-':
-      return TokenType::MINUS;
-    case '=':
-      return TokenType::EQ;
-    case '!':
-      return TokenType::NOT;
-    case '<':
-      return TokenType::LT;
-    case '(':
-      return TokenType::LEFT_BRACE;
-    case ')':
-      return TokenType::RIGHT_BRACE;
-    case '{':
-      return TokenType::LEFT_CBRACE;
-    case '}':
-      return TokenType::RIGHT_CBRACE;
-    case ';':
-      return TokenType::SEMICOLUMN;
-    case ',':
-      return TokenType::COMMA;
-    case EOF:
-      return TokenType::TOKEN_EOF;
-    default:
-      return std::nullopt;
-  }
-}
-
 }  // namespace lex

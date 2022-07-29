@@ -17,7 +17,8 @@ enum class TokenType {
   PLUS,
   MINUS,
 
-  EQ,
+  ASSIGN,
+  EQUALS,
   LT,
 
   LEFT_BRACE,
@@ -60,7 +61,8 @@ enum class TokenType {
   code(FALSE)               \
   code(PLUS)                \
   code(MINUS)               \
-  code(EQ)                  \
+  code(ASSIGN)              \
+  code(EQUALS)              \
   code(LT)                  \
   code(LEFT_BRACE)          \
   code(RIGHT_BRACE)         \

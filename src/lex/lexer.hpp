@@ -14,7 +14,7 @@ namespace lex {
 
 class Lexer {
  public:
-  Lexer(std::istream& source) : info_{source} {
+  Lexer(std::istream& source) : scanner_{source} {
     Advance();  // so that it starts in a valid state for Peek()
   }
 
@@ -55,14 +55,14 @@ class Lexer {
 
  private:
   void SkipWhitespace() {
-    while (IsWhitespace(info_.CurrentSymbol())) {
-      info_.MoveRight();
+    while (IsWhitespace(scanner_.CurrentSymbol())) {
+      scanner_.MoveRight();
     }
   }
 
   void SkipComments() {
-    while (info_.CurrentSymbol() == '#') {
-      info_.MoveNextLine();
+    while (scanner_.CurrentSymbol() == '#') {
+      scanner_.MoveNextLine();
       SkipWhitespace();
     }
   }
@@ -70,9 +70,9 @@ class Lexer {
   ////////////////////////////////////////////////////////////////////
 
   std::optional<Token> MatchOperators() {
-    if (auto type = MatchSingleWidthOperator(info_.CurrentSymbol())) {
-      info_.MoveRight();
-      return Token{*type, info_.GetLocation()};
+    if (auto type = MatchOperator()) {
+      scanner_.MoveRight();
+      return Token{*type, scanner_.GetLocation()};
     }
 
     return std::nullopt;
@@ -95,11 +95,11 @@ class Lexer {
   std::optional<Token> MatchNumericLiteral() {
     int result = 0, match_span = 0;
 
-    while (isdigit(info_.CurrentSymbol())) {
+    while (isdigit(scanner_.CurrentSymbol())) {
       result *= 10;
-      result += info_.CurrentSymbol() - '0';
+      result += scanner_.CurrentSymbol() - '0';
 
-      info_.MoveRight();
+      scanner_.MoveRight();
       match_span += 1;
     }
 
@@ -107,7 +107,7 @@ class Lexer {
       return std::nullopt;
     }
 
-    return Token{TokenType::NUMBER, info_.GetLocation(), {result}};
+    return Token{TokenType::NUMBER, scanner_.GetLocation(), {result}};
   }
 
   std::optional<Token> MatchStringLiteral() {
@@ -115,25 +115,25 @@ class Lexer {
       return first == '\"';
     };
 
-    if (!first_quote(info_.CurrentSymbol())) {
+    if (!first_quote(scanner_.CurrentSymbol())) {
       return std::nullopt;
     }
 
     // It matched! Now do match the whole string
 
     // Consume commencing "
-    info_.MoveRight();
+    scanner_.MoveRight();
 
     std::string lit;
-    while (info_.CurrentSymbol() != '\"') {
-      lit.push_back(info_.CurrentSymbol());
-      info_.MoveRight();
+    while (scanner_.CurrentSymbol() != '\"') {
+      lit.push_back(scanner_.CurrentSymbol());
+      scanner_.MoveRight();
     }
 
     // Consume enclosing "
-    info_.MoveRight();
+    scanner_.MoveRight();
 
-    return Token{TokenType::STRING, info_.GetLocation(), {lit[0]}};
+    return Token{TokenType::STRING, scanner_.GetLocation(), {lit[0]}};
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -143,30 +143,69 @@ class Lexer {
     auto type = table_.LookupOrInsert(word);
 
     if (type == TokenType::IDENTIFIER) {
-      return Token{type, info_.GetLocation(), {word}};
+      return Token{type, scanner_.GetLocation(), {word}};
     }
 
     // So it must be a keyword with the
     // exact type encoded direcly in `type`
-    return Token{type, info_.GetLocation()};
+    return Token{type, scanner_.GetLocation()};
   }
 
   std::string BufferWord() {
     std::string result;
 
-    while (isalnum(info_.CurrentSymbol())) {
-      result.push_back(info_.CurrentSymbol());
-      info_.MoveRight();
+    while (isalnum(scanner_.CurrentSymbol())) {
+      result.push_back(scanner_.CurrentSymbol());
+      scanner_.MoveRight();
     }
 
     return result;
   }
 
   ////////////////////////////////////////////////////////////////////
+ private:
+  std::optional<TokenType> MatchOperator() {
+    switch (scanner_.CurrentSymbol()) {
+        // A bit of a special case
+      case '=': {
+        if (scanner_.PeekNextSymbol() == '=') {
+          scanner_.MoveRight();
+          return TokenType::EQUALS;
+        } else {
+          return TokenType::ASSIGN;
+        }
+      }
+
+      case '+':
+        return TokenType::PLUS;
+      case '-':
+        return TokenType::MINUS;
+      case '!':
+        return TokenType::NOT;
+      case '<':
+        return TokenType::LT;
+      case '(':
+        return TokenType::LEFT_BRACE;
+      case ')':
+        return TokenType::RIGHT_BRACE;
+      case '{':
+        return TokenType::LEFT_CBRACE;
+      case '}':
+        return TokenType::RIGHT_CBRACE;
+      case ';':
+        return TokenType::SEMICOLUMN;
+      case ',':
+        return TokenType::COMMA;
+      case EOF:
+        return TokenType::TOKEN_EOF;
+      default:
+        return std::nullopt;
+    }
+  }
 
  private:
   Token peek_{};
-  Scanner info_;
+  Scanner scanner_;
   IdentTable table_;
 };
 

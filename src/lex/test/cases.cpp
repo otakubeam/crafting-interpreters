@@ -80,7 +80,7 @@ TEST_CASE("Statement", "[lex]") {
 
   CHECK(l.Peek().type == lex::TokenType::VAR);
   CHECK(l.Advance().type == lex::TokenType::IDENTIFIER);
-  CHECK(l.Advance().type == lex::TokenType::EQ);
+  CHECK(l.Advance().type == lex::TokenType::ASSIGN);
   CHECK(l.Advance().type == lex::TokenType::NUMBER);
   CHECK(l.Advance().type == lex::TokenType::SEMICOLUMN);
 }
@@ -145,6 +145,17 @@ TEST_CASE("Curly", "[lex]") {
 
   CHECK(l.Peek().type == lex::TokenType::LEFT_CBRACE);
   CHECK(l.Advance().type == lex::TokenType::RIGHT_CBRACE);
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Assign vs Equals", "[lex]") {
+  std::stringstream source("== = ==");
+  lex::Lexer l{source};
+
+  CHECK(l.Peek().type == lex::TokenType::EQUALS);
+  CHECK(l.Advance().type == lex::TokenType::ASSIGN);
+  CHECK(l.Advance().type == lex::TokenType::EQUALS);
 }
 
 //////////////////////////////////////////////////////////////////////

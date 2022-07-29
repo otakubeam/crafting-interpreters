@@ -176,7 +176,7 @@ class Parser {
 
     // 2. Get an expression to assign to
 
-    Consume(lex::TokenType::EQ);
+    Consume(lex::TokenType::ASSIGN);
 
     auto value = ParseExpression();
     FMT_ASSERT(value, "Trying to assign a non-existent value");
