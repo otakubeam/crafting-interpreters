@@ -120,8 +120,7 @@ class Evaluator : public EnvVisitor<SBObject> {
 
         // std::string
       case 1:
-        // TODO: Make string a PrimitiveType
-        return PrimitiveType{std::get<std::string>(sem_info)[0]};
+        return PrimitiveType{std::get<std::string>(sem_info)};
 
         // bool
       case 2:

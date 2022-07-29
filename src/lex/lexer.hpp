@@ -133,7 +133,7 @@ class Lexer {
     // Consume enclosing "
     scanner_.MoveRight();
 
-    return Token{TokenType::STRING, scanner_.GetLocation(), {lit[0]}};
+    return Token{TokenType::STRING, scanner_.GetLocation(), {lit}};
   }
 
   ////////////////////////////////////////////////////////////////////

@@ -4,6 +4,7 @@
 
 #include <cstdint>
 #include <variant>
+#include <string>
 
 //////////////////////////////////////////////////////////////////////
 
@@ -11,7 +12,7 @@ using PrimitiveType = std::variant<  //
     std::nullptr_t,                  //
     int,                             //
     bool,                            //
-    char                             // 
+    std::string                      //
     >;
 
 //////////////////////////////////////////////////////////////////////

@@ -18,7 +18,7 @@ TEST_CASE("Just works", "[rt]") {
 TEST_CASE("Throws", "[rt]") {
   CHECK_THROWS_AS(std::get<int>(PrimitiveType{}),  //
                   std::bad_variant_access);
-  CHECK_THROWS_AS(std::get<char>(PrimitiveType{1}),  //
+  CHECK_THROWS_AS(std::get<std::string>(PrimitiveType{1}),  //
                   std::bad_variant_access);
   CHECK_THROWS_AS(std::get<int>(PrimitiveType{true}),  //
                   std::bad_variant_access);
