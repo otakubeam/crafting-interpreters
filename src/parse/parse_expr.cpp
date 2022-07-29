@@ -32,7 +32,6 @@ Expression* Parser::ParseBinary() {
   auto token = lexer_.Peek();
 
   while (Matches(TokenType::PLUS) || Matches(TokenType::MINUS)) {
-    UNSCOPED_INFO("Here");
     if (auto snd = ParseUnary()) {
       fst = new BinaryExpression(fst, token, snd);
     } else {

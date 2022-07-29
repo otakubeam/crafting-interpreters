@@ -251,3 +251,31 @@ TEST_CASE("Yield as break", "[ast]") {
   Evaluator e;
   CHECK_THROWS_AS(e.Eval(p.ParseStatement()), Evaluator::YieldedValue);
 }
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("If statement (I)", "[ast]") {
+  std::stringstream source(  //
+      "if false { print(1); } else { print(0); }");
+  //                          -----------
+  //                          not executed
+  Parser p{lex::Lexer{source}};
+
+  Evaluator e;
+  e.Eval(p.ParseStatement());
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("If statement (II)", "[ast]") {
+  std::stringstream source(  //
+      "fun negate(val) { if val { return false; } else { return true; } }"
+      "if negate(true) { print(1); } else { print(0); }");
+  Parser p{lex::Lexer{source}};
+
+  Evaluator e;
+  e.Eval(p.ParseStatement());
+  e.Eval(p.ParseStatement());
+}
+
+//////////////////////////////////////////////////////////////////////

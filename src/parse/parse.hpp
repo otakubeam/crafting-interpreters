@@ -111,16 +111,16 @@ class Parser {
     FMT_ASSERT(condition,  //
                "If statement without condition");
 
-    auto true_branch = ParseStatement();
+    auto true_branch = ParseBlockStatement();
     FMT_ASSERT(true_branch,  //
                "If statement without true branch");
 
-    Statement* false_branch = nullptr;
+    BlockStatement* false_branch = nullptr;
 
     if (Matches(lex::TokenType::ELSE)) {
-      false_branch = ParseStatement();
+      false_branch = ParseBlockStatement();
       FMT_ASSERT(false_branch,  //
-                 "Else clause without associated statement");
+                 "Else clause without an associated statement");
     }
 
     return new IfStatement(condition, true_branch, false_branch);

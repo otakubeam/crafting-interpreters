@@ -18,8 +18,8 @@ class Statement : public TreeNode {
 
 class IfStatement : public Statement {
  public:
-  IfStatement(Expression* condition, Statement* true_branch,
-              Statement* false_branch = nullptr)
+  IfStatement(Expression* condition, BlockStatement* true_branch,
+              BlockStatement* false_branch = nullptr)
       : condition_{condition},
         true_branch_{true_branch},
         false_branch_{false_branch} {
@@ -30,8 +30,8 @@ class IfStatement : public Statement {
   }
 
   Expression* condition_;
-  Statement* true_branch_;
-  Statement* false_branch_ = nullptr;
+  BlockStatement* true_branch_;
+  BlockStatement* false_branch_ = nullptr;
 };
 
 //////////////////////////////////////////////////////////////////////
