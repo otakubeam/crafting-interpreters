@@ -42,7 +42,7 @@ class ExprStatement : public Statement {
   }
 
   virtual void Accept(Visitor* visitor) override {
-    visitor->VisitExpression(expr_);
+    visitor->VisitExprStatement(this);
   }
 
   Expression* expr_;

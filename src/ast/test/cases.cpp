@@ -202,22 +202,18 @@ TEST_CASE("Bad scope access", "[ast]") {
 
 TEST_CASE("Fn call", "[ast]") {
   std::stringstream source(
-      "var a = 3; fun f() { var a = 5; }"
-      // "f();" <<<-------- cannot parse this yet
-      "a");
+      "var a = 3;"
+      "fun f() { print(a); }"
+      "f();");
   Parser p{lex::Lexer{source}};
 
   Evaluator e;
-
   e.Eval(p.ParseStatement());
   e.Eval(p.ParseStatement());
 
-  auto fn_call = new FnCallExpression(
-      lex::Token{lex::TokenType::IDENTIFIER, lex::Location{}, "f"}, {});
+  // Causes problems
 
-  e.Eval(fn_call);
-
-  CHECK(e.Eval(p.ParseExpression()) == FromPrim(5));
+  e.Eval(p.ParseStatement());
 }
 
 //////////////////////////////////////////////////////////////////////

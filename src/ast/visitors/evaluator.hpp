@@ -42,7 +42,7 @@ class Evaluator : public EnvVisitor<SBObject> {
   ////////////////////////////////////////////////////////////////////
 
   virtual void VisitFunDecl(FunDeclStatement* node) override {
-    auto name = std::get<std::string>(node->name_.sem_info);
+    auto name = node->name_.GetName();
     SBObject val = {new FunctionType{node}};
     env_->Declare(name, val);
   }
