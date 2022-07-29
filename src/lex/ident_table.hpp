@@ -22,6 +22,8 @@ class IdentTable {
 
  private:
   void Populate() {
+    map_.insert({"return", TokenType::RETURN});
+    map_.insert({"yield", TokenType::YIELD});
     map_.insert({"false", TokenType::FALSE});
     map_.insert({"else", TokenType::ELSE});
     map_.insert({"true", TokenType::TRUE});

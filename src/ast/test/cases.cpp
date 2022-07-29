@@ -210,9 +210,6 @@ TEST_CASE("Fn call", "[ast]") {
   Evaluator e;
   e.Eval(p.ParseStatement());
   e.Eval(p.ParseStatement());
-
-  // Causes problems
-
   e.Eval(p.ParseStatement());
 }
 

@@ -41,6 +41,8 @@ enum class TokenType {
   FOR,
 
   SEMICOLUMN,
+  RETURN,
+  YIELD,
 
   // These only change the location info of the lexer
   TOKEN_EOL,
@@ -73,6 +75,8 @@ enum class TokenType {
   code(ELSE)                \
   code(FOR)                 \
   code(SEMICOLUMN)          \
+  code(RETURN)              \
+  code(YIELD)               \
   code(TOKEN_EOL)           \
   code(TOKEN_EOF)
 // clang-format on

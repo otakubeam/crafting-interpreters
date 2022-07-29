@@ -13,7 +13,7 @@ Evaluator::~Evaluator() = default;
 //////////////////////////////////////////////////////////////////////
 
 void Evaluator::VisitExpression(Expression* /* node */) {
-  FMT_ASSERT(false, "Visiting bare expression");
+  FMT_ASSERT(false, "\nVisiting bare expression\n");
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -91,7 +91,15 @@ void Evaluator::VisitFnCall(FnCallExpression* node) {
               node->fn_name_.GetName())
           .value());
 
-  fn_object->Compute(this, args);
+  auto ret = SBObject{};
+
+  try {
+    fn_object->Compute(this, args);
+  } catch (ReturnedValue val) {
+    ret = val.value;
+  }
+
+  return_value = ret;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -103,6 +111,7 @@ void Evaluator::VisitLiteral(LiteralExpression* lit) {
 
       // TODO: think better about error handling
       return_value = env_->Get(name).value();
+      //                            ----------
 
       break;
     }

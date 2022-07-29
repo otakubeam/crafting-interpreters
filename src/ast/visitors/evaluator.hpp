@@ -49,6 +49,32 @@ class Evaluator : public EnvVisitor<SBObject> {
 
   ////////////////////////////////////////////////////////////////////
 
+  struct ReturnedValue {
+    SBObject value;
+  };
+
+  virtual void VisitReturn(ReturnStatement* node) override {
+    auto ret = node->return_value_ ?  //
+                   Eval(node->return_value_)
+                                   : SBObject{};
+    throw ReturnedValue{ret};
+  }
+
+  ////////////////////////////////////////////////////////////////////
+
+  struct YieldedValue {
+    SBObject value;
+  };
+
+  virtual void VisitYield(YieldStatement* node) override {
+    auto ret = node->yield_value_ ?  //
+                   Eval(node->yield_value_)
+                                  : SBObject{};
+    throw YieldedValue{ret};
+  }
+
+  ////////////////////////////////////////////////////////////////////
+
   virtual void VisitExprStatement(ExprStatement* node) override {
     Eval(node->expr_);
   }
@@ -57,6 +83,17 @@ class Evaluator : public EnvVisitor<SBObject> {
 
   virtual void VisitBlockStatement(BlockStatement* node) override {
     Environment::ScopeGuard guard{&env_};
+
+    // TODO: make an expression
+
+    // try {
+    //   for (auto stmt : node->stmts_) {
+    //     Eval(stmt);
+    //   }
+    // } catch (YieldedValue yield) {
+    //
+    // }
+
     for (auto stmt : node->stmts_) {
       Eval(stmt);
     }

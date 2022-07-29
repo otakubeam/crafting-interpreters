@@ -13,11 +13,17 @@ class BinaryExpression;
 class UnaryExpression;
 class FnCallExpression;
 class LiteralExpression;
+
 //---------------
 class Statement;
+
 class IfStatement;
 class ExprStatement;
 class BlockStatement;
+
+class YieldStatement;
+class ReturnStatement;
+
 class VarDeclStatement;
 class FunDeclStatement;
 
@@ -30,6 +36,10 @@ class Visitor {
   virtual void VisitIf(IfStatement* node) = 0;
 
   virtual void VisitStatement(Statement* node) = 0;
+
+  virtual void VisitYield(YieldStatement* node) = 0;
+
+  virtual void VisitReturn(ReturnStatement* node) = 0;
 
   virtual void VisitVarDecl(VarDeclStatement* node) = 0;
 

@@ -35,6 +35,14 @@ class Parser {
       return block_statement;
     }
 
+    if (auto ret_stmt = ParseReturnStatement()) {
+      return ret_stmt;
+    }
+
+    if (auto yield_stmt = ParseYieldStatement()) {
+      return yield_stmt;
+    }
+
     if (auto expr_stmt = ParseExprStatement()) {
       return expr_stmt;
     }
@@ -116,6 +124,38 @@ class Parser {
     }
 
     return new IfStatement(condition, true_branch, false_branch);
+  }
+
+  ///////////////////////////////////////////////////////////////////
+
+  ReturnStatement* ParseReturnStatement() {
+    if (!Matches(lex::TokenType::RETURN)) {
+      return nullptr;
+    }
+
+    Expression* ret_expr = nullptr;
+    if (!Matches(lex::TokenType::SEMICOLUMN)) {
+      ret_expr = ParseExpression();
+    }
+
+    return new ReturnStatement{ret_expr};
+  }
+
+  ///////////////////////////////////////////////////////////////////
+
+  // Doesn't this sound a bit like `break`?
+
+  YieldStatement* ParseYieldStatement() {
+    if (!Matches(lex::TokenType::YIELD)) {
+      return nullptr;
+    }
+
+    Expression* ret_expr = nullptr;
+    if (!Matches(lex::TokenType::SEMICOLUMN)) {
+      ret_expr = ParseExpression();
+    }
+
+    return new YieldStatement{ret_expr};
   }
 
   ///////////////////////////////////////////////////////////////////

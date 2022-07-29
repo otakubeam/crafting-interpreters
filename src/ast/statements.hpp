@@ -100,3 +100,31 @@ class BlockStatement : public Statement {
 };
 
 //////////////////////////////////////////////////////////////////////
+
+class ReturnStatement : public Statement {
+ public:
+  ReturnStatement(Expression* return_value) : return_value_{return_value} {
+  }
+
+  virtual void Accept(Visitor* visitor) override {
+    visitor->VisitReturn(this);
+  }
+
+  Expression* return_value_;
+};
+
+//////////////////////////////////////////////////////////////////////
+
+class YieldStatement : public Statement {
+ public:
+  YieldStatement(Expression* yield_value) : yield_value_{yield_value} {
+  }
+
+  virtual void Accept(Visitor* visitor) override {
+    visitor->VisitYield(this);
+  }
+
+  Expression* yield_value_;
+};
+
+//////////////////////////////////////////////////////////////////////

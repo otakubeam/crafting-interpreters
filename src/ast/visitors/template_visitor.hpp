@@ -5,6 +5,8 @@
 #include <ast/visitors/visitor.hpp>
 #include <ast/syntax_tree.hpp>
 
+//////////////////////////////////////////////////////////////////////
+
 template <typename T>
 class ReturnVisitor : public Visitor {
  public:
@@ -20,6 +22,8 @@ class ReturnVisitor : public Visitor {
   T return_value;
 };
 
+//////////////////////////////////////////////////////////////////////
+
 template <typename T>
 class EnvVisitor : public ReturnVisitor<T> {
  public:
@@ -32,3 +36,5 @@ class EnvVisitor : public ReturnVisitor<T> {
   Environment global_environment;
   Environment* env_{nullptr};
 };
+
+//////////////////////////////////////////////////////////////////////
