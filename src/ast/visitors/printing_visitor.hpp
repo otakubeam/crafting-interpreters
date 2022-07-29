@@ -29,6 +29,14 @@ class PrintingVisitor : public ReturnVisitor<std::string> {
     std::abort();
   }
 
+  virtual void VisitReturn(ReturnStatement*) override {
+    std::abort();
+  }
+
+  virtual void VisitYield(YieldStatement*) override {
+    std::abort();
+  }
+
   virtual void VisitBlockStatement(BlockStatement*) override {
     std::abort();
   }

@@ -32,7 +32,9 @@ TEST_CASE("Grouping", "[lex]") {
 ///////////////////////////////////////////////////////////////////
 
 TEST_CASE("Keywords", "[lex]") {
-  std::stringstream source("var fun for if else print true false");
+  std::stringstream source(
+      "var fun for if else "
+      "return yield true false");
   lex::Lexer l{source};
 
   REQUIRE(l.Peek().type == lex::TokenType::VAR);
@@ -40,7 +42,8 @@ TEST_CASE("Keywords", "[lex]") {
   CHECK(l.Advance().type == lex::TokenType::FOR);
   CHECK(l.Advance().type == lex::TokenType::IF);
   CHECK(l.Advance().type == lex::TokenType::ELSE);
-  CHECK(l.Advance().type == lex::TokenType::PRINT);
+  CHECK(l.Advance().type == lex::TokenType::RETURN);
+  CHECK(l.Advance().type == lex::TokenType::YIELD);
   CHECK(l.Advance().type == lex::TokenType::TRUE);
   CHECK(l.Advance().type == lex::TokenType::FALSE);
 }
