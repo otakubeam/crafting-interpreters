@@ -66,6 +66,10 @@ class PrintingVisitor : public ReturnVisitor<std::string> {
         Eval(node->operand_));
   }
 
+  virtual void VisitFnCall(FnCallExpression*) override {
+    std::abort();
+  }
+
   virtual void VisitLiteral(LiteralExpression* node) override {
     auto lit_string = Format(literal_eval_.Eval(node));
     return_value = fmt::format("Literal {}", lit_string);

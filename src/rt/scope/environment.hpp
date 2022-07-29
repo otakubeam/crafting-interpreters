@@ -11,7 +11,8 @@ class Environment {
   using Name = std::string;
 
   static Environment MakeGlobal() {
-    return Environment{nullptr};
+    auto gl = Environment{nullptr};
+    return gl;
   }
 
   ////////////////////////////////////////////////////////////////////

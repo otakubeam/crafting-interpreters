@@ -11,6 +11,7 @@ class Expression;
 class ComparisonExpression;
 class BinaryExpression;
 class UnaryExpression;
+class FnCallExpression;
 class LiteralExpression;
 //---------------
 class Statement;
@@ -47,6 +48,8 @@ class Visitor {
   virtual void VisitBinary(BinaryExpression* node) = 0;
 
   virtual void VisitUnary(UnaryExpression* node) = 0;
+
+  virtual void VisitFnCall(FnCallExpression* node) = 0;
 
   virtual void VisitLiteral(LiteralExpression* node) = 0;
 };

@@ -9,6 +9,6 @@
 struct IFunction {
   virtual ~IFunction() = default;
 
-  virtual SBObject Compute(ReturnVisitor<SBObject>* e,
+  virtual SBObject Compute(EnvVisitor<SBObject>* e,  //
                            std::vector<SBObject>) = 0;
 };

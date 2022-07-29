@@ -4,6 +4,8 @@
 
 #include <lex/token.hpp>
 
+#include <vector>
+
 //////////////////////////////////////////////////////////////////////
 
 class Expression : public TreeNode {
@@ -59,6 +61,22 @@ class UnaryExpression : public Expression {
 
   lex::Token operator_;
   Expression* operand_;
+};
+
+//////////////////////////////////////////////////////////////////////
+
+class FnCallExpression : public Expression {
+ public:
+  FnCallExpression(lex::Token fn_name, std::vector<Expression*> arguments)
+      : fn_name_(fn_name), arguments_{arguments} {
+  }
+
+  virtual void Accept(Visitor* visitor) override {
+    visitor->VisitFnCall(this);
+  }
+
+  lex::Token fn_name_;
+  std::vector<Expression*> arguments_;
 };
 
 //////////////////////////////////////////////////////////////////////

@@ -10,7 +10,7 @@
 #include <rt/primitive_type.hpp>
 #include <rt/base_object.hpp>
 
-class Evaluator : public ReturnVisitor<SBObject> {
+class Evaluator : public EnvVisitor<SBObject> {
  public:
   friend struct IFunction;
 
@@ -69,6 +69,7 @@ class Evaluator : public ReturnVisitor<SBObject> {
   virtual void VisitComparison(ComparisonExpression* node) override;
   virtual void VisitBinary(BinaryExpression* node) override;
   virtual void VisitUnary(UnaryExpression* node) override;
+  virtual void VisitFnCall(FnCallExpression* node) override;
   virtual void VisitLiteral(LiteralExpression* lit) override;
 
  private:
@@ -97,8 +98,4 @@ class Evaluator : public ReturnVisitor<SBObject> {
         FMT_ASSERT(false, "\n Error: Non-exhaustive match \n");
     }
   }
-
- private:
-  Environment global_environment;
-  Environment* env_{nullptr};
 };

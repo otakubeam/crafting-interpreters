@@ -18,6 +18,16 @@ class ReturnVisitor : public Visitor {
 
  protected:
   T return_value;
+};
+
+template <typename T>
+class EnvVisitor : public ReturnVisitor<T> {
+ public:
+  EnvVisitor() : global_environment(Environment::MakeGlobal()) {
+    env_ = &global_environment;
+  }
+
+  ~EnvVisitor() = default;
 
   Environment global_environment;
   Environment* env_{nullptr};

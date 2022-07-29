@@ -1,9 +1,11 @@
 #include <ast/visitors/evaluator.hpp>
 
+#include <rt/intrinsic.hpp>
+
 //////////////////////////////////////////////////////////////////////
 
-Evaluator::Evaluator() : global_environment(Environment::MakeGlobal()) {
-  env_ = &global_environment;
+Evaluator::Evaluator() {
+  env_->Declare("print", new Print{});
 }
 
 Evaluator::~Evaluator() = default;
@@ -73,6 +75,23 @@ void Evaluator::VisitUnary(UnaryExpression* node) {
     default:
       std::abort();
   }
+}
+
+//////////////////////////////////////////////////////////////////////
+
+void Evaluator::VisitFnCall(FnCallExpression* node) {
+  std::vector<SBObject> args;
+
+  for (auto expr : node->arguments_) {
+    args.push_back(Eval(expr));
+  }
+
+  auto fn_object = std::get<IFunction*>(  //
+      env_->Get(                          //
+              node->fn_name_.GetName())
+          .value());
+
+  fn_object->Compute(this, args);
 }
 
 //////////////////////////////////////////////////////////////////////

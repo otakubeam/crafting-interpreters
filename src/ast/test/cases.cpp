@@ -199,3 +199,36 @@ TEST_CASE("Bad scope access", "[ast]") {
 }
 
 //////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Fn call", "[ast]") {
+  std::stringstream source(
+      "var a = 3; fun f() { var a = 5; }"
+      // "f();"
+      "a");
+  Parser p{lex::Lexer{source}};
+
+  Evaluator e;
+
+  e.Eval(p.ParseStatement());
+  e.Eval(p.ParseStatement());
+
+  auto fn_call = new FnCallExpression(
+      lex::Token{lex::TokenType::IDENTIFIER, lex::Location{}, "f"}, {});
+
+  e.Eval(fn_call);
+
+  CHECK(e.Eval(p.ParseExpression()) == FromPrim(5));
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Intrinsic print", "[ast]") {
+  Evaluator e;
+
+  auto fn_call = new FnCallExpression(
+      lex::Token{lex::TokenType::IDENTIFIER, lex::Location{}, "print"}, {});
+
+  e.Eval(fn_call);
+}
+
+//////////////////////////////////////////////////////////////////////
