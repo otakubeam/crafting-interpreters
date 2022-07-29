@@ -257,8 +257,8 @@ TEST_CASE("Yield as break", "[ast]") {
 TEST_CASE("If statement (I)", "[ast]") {
   std::stringstream source(  //
       "if false { print(1); } else { print(0); }");
-  //                          -----------
-  //                          not executed
+  //                               -----------
+  //                               not executed
   Parser p{lex::Lexer{source}};
 
   Evaluator e;
@@ -276,6 +276,27 @@ TEST_CASE("If statement (II)", "[ast]") {
   Evaluator e;
   e.Eval(p.ParseStatement());
   e.Eval(p.ParseStatement());
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Recursive", "[ast]") {
+  std::stringstream source(  //
+      "                                          "
+      " fun sum(n) {                             "
+      "    if n == 0 {                           "
+      "        return 1;                         "
+      "    } else {                              "
+      "        return (n + sum(n-1));            "
+      "    }                                     "
+      " }                                        "
+      "                                          "
+      "              sum(4)                      ");
+  Parser p{lex::Lexer{source}};
+
+  Evaluator e;
+  e.Eval(p.ParseStatement());
+  CHECK(e.Eval(p.ParseExpression()) == FromPrim(11));
 }
 
 //////////////////////////////////////////////////////////////////////

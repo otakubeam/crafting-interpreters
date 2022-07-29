@@ -10,7 +10,7 @@ Expression* Parser::ParseComparison() {
   using lex::TokenType;
   auto token = lexer_.Peek();
 
-  while (Matches(TokenType::LT)) {
+  while (Matches(TokenType::LT) || Matches(TokenType::EQUALS)) {
     if (auto snd = ParseBinary()) {
       fst = new ComparisonExpression(fst, token, snd);
     } else {
