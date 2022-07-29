@@ -194,7 +194,7 @@ TEST_CASE("Empty block statement", "[parser]") {
 //////////////////////////////////////////////////////////////////////
 
 TEST_CASE("Function application (I)", "[parser]") {
-  std::stringstream source("f(1, 2)");
+  std::stringstream source("print(4, 3)");
   Parser p{lex::Lexer{source}};
 
   auto fn_application = p.ParseExpression();

@@ -223,18 +223,13 @@ TEST_CASE("Fn call", "[ast]") {
 //////////////////////////////////////////////////////////////////////
 
 TEST_CASE("Intrinsic print", "[ast]") {
-  std::stringstream source("4 3");
+  std::stringstream source("print(4, 3)");
   Parser p{lex::Lexer{source}};
-
-  Evaluator e;
-
-  auto fn_call = new FnCallExpression(
-      lex::Token{lex::TokenType::IDENTIFIER, lex::Location{}, "print"},
-      {p.ParseExpression(), p.ParseExpression()});
 
   // Side effect: prints "\n\n4 3 \n\n"
 
-  e.Eval(fn_call);
+  Evaluator e;
+  e.Eval(p.ParseExpression());
 }
 
 //////////////////////////////////////////////////////////////////////
