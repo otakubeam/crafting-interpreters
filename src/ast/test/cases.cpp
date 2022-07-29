@@ -67,6 +67,39 @@ TEST_CASE("Print tree", "[ast]") {
 
 //////////////////////////////////////////////////////////////////////
 
+TEST_CASE("Grouping", "[ast]") {
+  char stream[] = "1 - (2 - 3)";
+  std::stringstream source{stream};
+  Parser p{lex::Lexer{source}};
+
+  Evaluator e;
+  CHECK(e.Eval(p.ParseExpression()) == FromPrim(2));
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Associativity", "[parser]") {
+  char stream[] = "1 - 2 - 3";
+  std::stringstream source{stream};
+  Parser p{lex::Lexer{source}};
+
+  Evaluator e;
+  CHECK(e.Eval(p.ParseExpression()) == FromPrim(-4));
+}
+
+//////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Booleans", "[parser]") {
+  char stream[] = "!true";
+  std::stringstream source{stream};
+  Parser p{lex::Lexer{source}};
+
+  Evaluator e;
+  CHECK(e.Eval(p.ParseExpression()) == FromPrim(false));
+}
+
+//////////////////////////////////////////////////////////////////////
+
 TEST_CASE("Variable decalration", "[ast]") {
   char stream[] = "var x = 5;";
   std::stringstream source{stream};
@@ -283,13 +316,13 @@ TEST_CASE("If statement (II)", "[ast]") {
 TEST_CASE("Recursive", "[ast]") {
   std::stringstream source(  //
       "                                          "
-      " fun sum(n) {                             "
-      "    if n == 0 {                           "
-      "        return 1;                         "
-      "    } else {                              "
-      "        return (n + sum(n-1));            "
-      "    }                                     "
-      " }                                        "
+      "      fun sum(n) {                        "
+      "         if n == 0 {                      "
+      "             return 1;                    "
+      "         } else {                         "
+      "             return (n + sum(n-1));       "
+      "         }                                "
+      "      }                                   "
       "                                          "
       "              sum(4)                      ");
   Parser p{lex::Lexer{source}};

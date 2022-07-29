@@ -1,6 +1,3 @@
-#include <ast/visitors/printing_visitor.hpp>
-#include <ast/visitors/evaluator.hpp>
-
 #include <parse/parse.hpp>
 
 // Finally,
@@ -13,8 +10,8 @@ TEST_CASE("Just works", "[parser]") {
   std::stringstream source{stream};
   Parser p{lex::Lexer{source}};
 
-  Evaluator e;
-  CHECK(e.Eval(p.ParseExpression()) == FromPrim(-1));
+  auto expr = p.ParseExpression();
+  REQUIRE(typeid(*expr) == typeid(BinaryExpression));
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -24,31 +21,11 @@ TEST_CASE("Parse as separate", "[parser]") {
   std::stringstream source{stream};
   Parser p{lex::Lexer{source}};
 
-  Evaluator e;
-  CHECK(e.Eval(p.ParsePrimary()) == FromPrim(1));
-  CHECK(e.Eval(p.ParseUnary()) == FromPrim(-2));
-}
+  auto expr = p.ParsePrimary();
+  REQUIRE(typeid(*expr) == typeid(LiteralExpression));
 
-//////////////////////////////////////////////////////////////////////
-
-TEST_CASE("Associativity", "[parser]") {
-  char stream[] = "1 - 2 - 3";
-  std::stringstream source{stream};
-  Parser p{lex::Lexer{source}};
-
-  Evaluator e;
-  CHECK(e.Eval(p.ParseExpression()) == FromPrim(-4));
-}
-
-//////////////////////////////////////////////////////////////////////
-
-TEST_CASE("Grouping", "[parser]") {
-  char stream[] = "1 - (2 - 3)";
-  std::stringstream source{stream};
-  Parser p{lex::Lexer{source}};
-
-  Evaluator e;
-  CHECK(e.Eval(p.ParseExpression()) == FromPrim(2));
+  expr = p.ParseUnary();
+  REQUIRE(typeid(*expr) == typeid(UnaryExpression));
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -58,8 +35,8 @@ TEST_CASE("Booleans", "[parser]") {
   std::stringstream source{stream};
   Parser p{lex::Lexer{source}};
 
-  Evaluator e;
-  CHECK(e.Eval(p.ParseExpression()) == FromPrim(false));
+  auto expr = p.ParseExpression();
+  REQUIRE(typeid(*expr) == typeid(UnaryExpression));
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -68,7 +45,9 @@ TEST_CASE("Variable declaration", "[parser]") {
   char stream[] = "var x = 5;";
   std::stringstream source{stream};
   Parser p{lex::Lexer{source}};
-  CHECK_NOTHROW(p.ParseStatement());
+
+  auto stmt = p.ParseStatement();
+  REQUIRE(typeid(*stmt) == typeid(VarDeclStatement));
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -78,8 +57,8 @@ TEST_CASE("Misleading minus", "[parser]") {
   std::stringstream source{stream};
   Parser p{lex::Lexer{source}};
 
-  Evaluator e;
-  CHECK_NOTHROW(p.ParseExpression());
+  auto expr = p.ParseExpression();
+  REQUIRE(typeid(*expr) == typeid(BinaryExpression));
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -108,16 +87,10 @@ TEST_CASE("Expression statement", "[parser]") {
   char stream[] = "1 + 2;";
   std::stringstream source{stream};
   Parser p{lex::Lexer{source}};
-  CHECK_NOTHROW(p.ParseStatement());
+
+  auto stmt = p.ParseStatement();
+  REQUIRE(typeid(*stmt) == typeid(ExprStatement));
 }
-
-//////////////////////////////////////////////////////////////////////
-
-// TEST_CASE("If statement", "[parser]") {
-//   char stream[] = "if 1 = 1 1; else 2;";
-//   Parser p{lex::Lexer{source}};
-//   CHECK_NOTHROW(p.ParseStatement());
-// }
 
 //////////////////////////////////////////////////////////////////////
 
@@ -135,7 +108,9 @@ TEST_CASE("Parse string literal (II)", "[parser]") {
   char stream[] = "\"ab\"";
   std::stringstream source{stream};
   Parser p{lex::Lexer{source}};
-  CHECK_NOTHROW(p.ParseExpression());
+
+  auto expr = p.ParseExpression();
+  REQUIRE(typeid(*expr) == typeid(LiteralExpression));
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -146,7 +121,9 @@ TEST_CASE("Parse function decl", "[parser]") {
   //                        name   no args   expr-statement
 
   Parser p{lex::Lexer{source}};
-  CHECK_NOTHROW(p.ParseStatement());
+
+  auto stmt = p.ParseStatement();
+  REQUIRE(typeid(*stmt) == typeid(FunDeclStatement));
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -157,7 +134,9 @@ TEST_CASE("Parse function declaration (II)", "[parser]") {
   //                        name          args       expr-statement
 
   Parser p{lex::Lexer{source}};
-  CHECK_NOTHROW(p.ParseStatement());
+
+  auto stmt = p.ParseStatement();
+  REQUIRE(typeid(*stmt) == typeid(FunDeclStatement));
 }
 
 //////////////////////////////////////////////////////////////////////
