@@ -8,7 +8,7 @@
 namespace lex {
 
 inline bool IsWhitespace(char ch) {
-  return ch == '\n' || ch == ' ' || ch == '\t';
+  return ch == ' ' || ch == '\n' || ch == '\t';
 }
 
 }  // namespace lex

@@ -14,7 +14,7 @@ add_compile_options(-Wall -Wextra -Wpedantic -g -fno-omit-frame-pointer)
 # add_compile_options(-fsanitize=address)
 # add_link_options(-fsanitize=address)
 
-find_package(fmt)
+find_package(fmt REQUIRED)
 find_package(Catch2 2 REQUIRED)
 
 # --------------------------------------------------------------------
@@ -40,46 +40,16 @@ add_task_library(lex)
 
 add_task_library(rt)
 
-add_task_library(ast)
-
 add_task_library(parse)
+
+add_task_library(ast)
 
 # --------------------------------------------------------------------
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin")
 
-function(add_task_executable BINARY_NAME)
+add_subdirectory(tests)
 
-    set(BINARY_SOURCES ${ARGN})
-
-    add_executable(${BINARY_NAME} ${BINARY_SOURCES} ${TASK_SOURCES})
-    target_link_libraries(${BINARY_NAME} PUBLIC lex parse rt ast fmt::fmt)
-    target_link_libraries(${BINARY_NAME} PRIVATE Catch2::Catch2)
-
-endfunction()
-
-# --------------------------------------------------------------------
-
-function(add_task_test_dir DIR_NAME)
-
-    set(BINARY_NAME ${DIR_NAME})
-
-    set(TEST_DIR "${DIR_NAME}/test")
-    file(GLOB_RECURSE TEST_CXX_SOURCES ${TEST_DIR}/*.cpp)
-
-    set(TEST_NAME "${DIR_NAME}_test")
-    add_task_executable(${TEST_NAME} ${TEST_CXX_SOURCES})
-
-endfunction()
-
-# --------------------------------------------------------------------
-
-add_task_test_dir(lex)
-
-add_task_test_dir(rt)
-
-add_task_test_dir(parse)
-
-add_task_test_dir(ast)
+add_subdirectory(play)
 
 # --------------------------------------------------------------------
