@@ -313,23 +313,11 @@ TEST_CASE("If statement (II)", "[ast]") {
 
 //////////////////////////////////////////////////////////////////////
 
-TEST_CASE("Recursive", "[ast]") {
-  std::stringstream source(  //
-      "                                          "
-      "      fun sum(n) {                        "
-      "         if n == 0 {                      "
-      "             return 1;                    "
-      "         } else {                         "
-      "             return (n + sum(n-1));       "
-      "         }                                "
-      "      }                                   "
-      "                                          "
-      "              sum(4)                      ");
-  Parser p{lex::Lexer{source}};
-
+TEST_CASE("Doesn't work", "[ast]") {
   Evaluator e;
-  e.Eval(p.ParseStatement());
-  CHECK(e.Eval(p.ParseExpression()) == FromPrim(11));
-}
+  Parser p(lex::Lexer{std::cin});
 
-//////////////////////////////////////////////////////////////////////
+  while (auto stmt = p.ParseStatement()) {
+    e.Eval(stmt);
+  }
+}
