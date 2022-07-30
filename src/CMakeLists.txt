@@ -50,6 +50,4 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin")
 
 add_subdirectory(tests)
 
-add_subdirectory(play)
-
 # --------------------------------------------------------------------

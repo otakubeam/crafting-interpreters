@@ -36,4 +36,6 @@ add_task_test_dir(parse)
 
 add_task_test_dir(ast)
 
+add_task_test_dir(play)
+
 # --------------------------------------------------------------------
